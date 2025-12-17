@@ -1,12 +1,19 @@
+import type { FileType } from "../../types/fileTypes";
 import { FileCard, type FileCardProps } from "../molecules/FileCard";
 
 export interface FileQueueProps {
   files: Omit<FileCardProps, "onRemove" | "onRetry">[];
+  type?: FileType;
   onRemove: (id: string) => void;
   onRetry?: (id: string) => void;
 }
 
-export const FileQueue = ({ files, onRemove, onRetry }: FileQueueProps) => {
+export const FileQueue = ({
+  files,
+  type = "all",
+  onRemove,
+  onRetry,
+}: FileQueueProps) => {
   const pendingFiles = files.filter((f) => f.status === "pending");
   const uploadingFiles = files.filter((f) => f.status === "uploading");
   const completedFiles = files.filter((f) => f.status === "completed");
@@ -49,8 +56,10 @@ export const FileQueue = ({ files, onRemove, onRetry }: FileQueueProps) => {
 
   if (files.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-12 text-center">
-        <p className="text-gray-600">No files in queue</p>
+      <div className="rounded-lg border-2 border-gray-300 bg-gray-50 p-12 text-center">
+        <p className="text-gray-600">
+          No {type === "all" ? "files" : type + "s"} in queue
+        </p>
       </div>
     );
   }

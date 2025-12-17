@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import Uppy from "@uppy/core";
 import XHRUpload from "@uppy/xhr-upload";
 import ThumbnailGenerator from "@uppy/thumbnail-generator";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { Dashboard } from "./components/templates/Dashboard";
 import type { FileCardProps } from "./components/molecules/FileCard";
 import "./App.css";
@@ -193,31 +191,29 @@ function App() {
   const failedCount = files.filter((f) => f.status === "error").length;
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <Dashboard
-        dropZoneProps={{
-          onFilesDropped: handleFilesDropped,
-          accept: "image/*",
-          multiple: true,
-          maxSize: 10 * 1024 * 1024,
-        }}
-        fileQueueProps={{
-          files,
-          onRemove: handleRemoveFile,
-          onRetry: handleRetryFile,
-        }}
-        actionButtonsProps={{
-          fileCount: files.length,
-          uploadingCount,
-          completedCount,
-          failedCount,
-          onUploadAll: handleUploadAll,
-          onCancelAll: handleCancelAll,
-          onRetryFailed: handleRetryFailed,
-          onClearCompleted: handleClearCompleted,
-        }}
-      />
-    </DndProvider>
+    <Dashboard
+      fileUploaderProps={{
+        onFilesDropped: handleFilesDropped,
+        type: "image",
+        multiple: true,
+      }}
+      fileQueueProps={{
+        files,
+        type: "image",
+        onRemove: handleRemoveFile,
+        onRetry: handleRetryFile,
+      }}
+      actionButtonsProps={{
+        fileCount: files.length,
+        uploadingCount,
+        completedCount,
+        failedCount,
+        onUploadAll: handleUploadAll,
+        onCancelAll: handleCancelAll,
+        onRetryFailed: handleRetryFailed,
+        onClearCompleted: handleClearCompleted,
+      }}
+    />
   );
 }
 

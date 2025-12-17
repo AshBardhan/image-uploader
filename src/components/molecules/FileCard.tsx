@@ -3,6 +3,7 @@ import { Icon } from "../atoms/Icon";
 import { Badge } from "../atoms/Badge";
 import { ProgressBar } from "../atoms/ProgressBar";
 import { clsx } from "clsx";
+import { formatFileSize } from "../../utils/fileUtils";
 
 export interface FileCardProps {
   id: string;
@@ -15,14 +16,6 @@ export interface FileCardProps {
   onRemove: (id: string) => void;
   onRetry?: (id: string) => void;
 }
-
-const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return "0 Bytes";
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
-};
 
 export const FileCard = ({
   id,

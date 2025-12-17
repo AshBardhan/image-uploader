@@ -1,15 +1,21 @@
-import { DropZone, type DropZoneProps } from "../organisms/DropZone";
+import {
+  FileUploader,
+  type FileUploaderProps,
+} from "../organisms/FileUploader";
 import { FileQueue, type FileQueueProps } from "../organisms/FileQueue";
-import { ActionButtons, type ActionButtonsProps } from "../molecules/ActionButtons";
+import {
+  ActionButtons,
+  type ActionButtonsProps,
+} from "../molecules/ActionButtons";
 
 export interface DashboardProps {
-  dropZoneProps: DropZoneProps;
+  fileUploaderProps: FileUploaderProps;
   fileQueueProps: FileQueueProps;
   actionButtonsProps: ActionButtonsProps;
 }
 
 export const Dashboard = ({
-  dropZoneProps,
+  fileUploaderProps,
   fileQueueProps,
   actionButtonsProps,
 }: DashboardProps) => {
@@ -23,8 +29,8 @@ export const Dashboard = ({
         </p>
       </div>
 
-      {/* Drop Zone */}
-      <DropZone {...dropZoneProps} />
+      {/* File Uploader */}
+      <FileUploader {...fileUploaderProps} />
 
       {/* Action Buttons */}
       {fileQueueProps.files.length > 0 && (
