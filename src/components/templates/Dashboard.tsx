@@ -2,22 +2,31 @@ import {
   FileUploader,
   type FileUploaderProps,
 } from "@/components/organisms/FileUploader";
-import { FileQueue, type FileQueueProps } from "@/components/organisms/FileQueue";
+import {
+  FileQueue,
+  type FileQueueProps,
+} from "@/components/organisms/FileQueue";
 import {
   ActionButtons,
   type ActionButtonsProps,
 } from "@/components/molecules/ActionButtons";
+import {
+  OverallProgress,
+  type OverallProgressProps,
+} from "@/components/molecules/OverallProgress";
 
 export interface DashboardProps {
   fileUploaderProps: FileUploaderProps;
   fileQueueProps: FileQueueProps;
   actionButtonsProps: ActionButtonsProps;
+  overallProgressProps?: OverallProgressProps;
 }
 
 export const Dashboard = ({
   fileUploaderProps,
   fileQueueProps,
   actionButtonsProps,
+  overallProgressProps,
 }: DashboardProps) => {
   return (
     <div className="mx-auto max-w-6xl space-y-8">
@@ -31,6 +40,11 @@ export const Dashboard = ({
 
       {/* File Uploader */}
       <FileUploader {...fileUploaderProps} />
+
+      {/* Overall Progress - Only show when files are actively uploading */}
+      {overallProgressProps && overallProgressProps.uploadingFiles > 0 && (
+        <OverallProgress {...overallProgressProps} />
+      )}
 
       {/* Action Buttons */}
       {fileQueueProps.files.length > 0 && (

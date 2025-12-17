@@ -10,10 +10,20 @@ type FileStatus = "pending" | "uploading" | "completed" | "error";
 
 interface FileWithPreview extends Omit<FileCardProps, "onRemove" | "onRetry"> {
   status: FileStatus;
+  uploadedBytes?: number;
+}
+
+interface UploadStats {
+  startTime: number;
+  totalBytesUploaded: number;
 }
 
 function App() {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const [uploadStats, setUploadStats] = useState<UploadStats>({
+    startTime: 0,
+    totalBytesUploaded: 0,
+  });
   const uppyRef = useRef<Uppy | null>(null);
 
   useEffect(() => {
@@ -75,7 +85,12 @@ function App() {
         setFiles((prev) =>
           prev.map((f) =>
             f.id === file.id
-              ? { ...f, progress: Math.round(percentage), status: "uploading" }
+              ? {
+                  ...f,
+                  progress: Math.round(percentage),
+                  status: "uploading",
+                  uploadedBytes: progress.bytesUploaded,
+                }
               : f,
           ),
         );
@@ -131,6 +146,10 @@ function App() {
 
   const handleUploadAll = () => {
     if (uppyRef.current) {
+      setUploadStats({
+        startTime: Date.now(),
+        totalBytesUploaded: 0,
+      });
       uppyRef.current.upload();
     }
   };
@@ -190,6 +209,41 @@ function App() {
   const completedCount = files.filter((f) => f.status === "completed").length;
   const failedCount = files.filter((f) => f.status === "error").length;
 
+  // Calculate overall progress metrics
+  const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
+  const uploadedBytes = files.reduce((sum, file) => {
+    if (file.status === "completed") {
+      return sum + file.size;
+    } else if (file.status === "uploading" && file.uploadedBytes) {
+      return sum + file.uploadedBytes;
+    }
+    return sum;
+  }, 0);
+
+  const overallProgress =
+    totalBytes > 0 ? Math.round((uploadedBytes / totalBytes) * 100) : 0;
+
+  // Calculate estimated time remaining
+  const calculateETA = (): number | undefined => {
+    if (uploadingCount === 0 || uploadStats.startTime === 0) {
+      return undefined;
+    }
+
+    const elapsedTime = (Date.now() - uploadStats.startTime) / 1000; // in seconds
+    const remainingBytes = totalBytes - uploadedBytes;
+
+    if (uploadedBytes === 0 || elapsedTime === 0) {
+      return undefined;
+    }
+
+    const uploadSpeed = uploadedBytes / elapsedTime; // bytes per second
+    const estimatedTimeRemaining = remainingBytes / uploadSpeed;
+
+    return estimatedTimeRemaining;
+  };
+
+  const estimatedTimeRemaining = calculateETA();
+
   return (
     <Dashboard
       fileUploaderProps={{
@@ -212,6 +266,16 @@ function App() {
         onCancelAll: handleCancelAll,
         onRetryFailed: handleRetryFailed,
         onClearCompleted: handleClearCompleted,
+      }}
+      overallProgressProps={{
+        totalFiles: files.length,
+        completedFiles: completedCount,
+        uploadingFiles: uploadingCount,
+        failedFiles: failedCount,
+        totalBytes,
+        uploadedBytes,
+        overallProgress,
+        estimatedTimeRemaining,
       }}
     />
   );
