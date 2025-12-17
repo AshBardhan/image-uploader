@@ -2,22 +2,21 @@ import { useState, useEffect, useRef } from "react";
 import Uppy from "@uppy/core";
 import XHRUpload from "@uppy/xhr-upload";
 import ThumbnailGenerator from "@uppy/thumbnail-generator";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { Dashboard } from "./components/templates/Dashboard";
+import type { FileCardProps } from "./components/molecules/FileCard";
 import "./App.css";
 
-interface FileWithPreview {
-  id: string;
-  name: string;
-  size: number;
-  preview?: string;
-  progress: number;
-  uploadComplete: boolean;
-  error?: string;
+type FileStatus = "pending" | "uploading" | "completed" | "error";
+
+interface FileWithPreview extends Omit<FileCardProps, "onRemove" | "onRetry"> {
+  status: FileStatus;
 }
 
 function App() {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const uppyRef = useRef<Uppy | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // Initialize Uppy instance
@@ -30,7 +29,6 @@ function App() {
     });
 
     // Add XHR Upload plugin for Cloudinary
-    // Note: You'll need to replace this with your actual Cloudinary endpoint and upload preset
     uppy.use(XHRUpload, {
       endpoint: "https://api.cloudinary.com/v1_1/ash-test/image/upload",
       formData: true,
@@ -51,12 +49,13 @@ function App() {
       uppy.setFileMeta(file.id, {
         upload_preset: "ash-test-upload",
       });
+
       const newFile: FileWithPreview = {
         id: file.id,
         name: file.name,
         size: file.size || 0,
         progress: 0,
-        uploadComplete: false,
+        status: "pending",
       };
 
       setFiles((prev) => [...prev, newFile]);
@@ -77,7 +76,9 @@ function App() {
           : 0;
         setFiles((prev) =>
           prev.map((f) =>
-            f.id === file.id ? { ...f, progress: Math.round(percentage) } : f,
+            f.id === file.id
+              ? { ...f, progress: Math.round(percentage), status: "uploading" }
+              : f,
           ),
         );
       }
@@ -88,9 +89,7 @@ function App() {
       if (file) {
         setFiles((prev) =>
           prev.map((f) =>
-            f.id === file.id
-              ? { ...f, uploadComplete: true, progress: 100 }
-              : f,
+            f.id === file.id ? { ...f, status: "completed", progress: 100 } : f,
           ),
         );
       }
@@ -101,7 +100,9 @@ function App() {
       if (file) {
         setFiles((prev) =>
           prev.map((f) =>
-            f.id === file.id ? { ...f, error: error.message } : f,
+            f.id === file.id
+              ? { ...f, status: "error", error: error.message }
+              : f,
           ),
         );
       }
@@ -114,10 +115,9 @@ function App() {
     };
   }, []);
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles && uppyRef.current) {
-      Array.from(selectedFiles).forEach((file) => {
+  const handleFilesDropped = (fileList: FileList) => {
+    if (uppyRef.current) {
+      Array.from(fileList).forEach((file) => {
         try {
           uppyRef.current?.addFile({
             name: file.name,
@@ -129,15 +129,44 @@ function App() {
         }
       });
     }
-    // Reset input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+  };
+
+  const handleUploadAll = () => {
+    if (uppyRef.current) {
+      uppyRef.current.upload();
     }
   };
 
-  const handleUpload = () => {
+  const handleCancelAll = () => {
     if (uppyRef.current) {
-      uppyRef.current.upload();
+      uppyRef.current.cancelAll();
+      setFiles([]);
+    }
+  };
+
+  const handleRetryFailed = () => {
+    if (uppyRef.current) {
+      const failedFiles = files.filter((f) => f.status === "error");
+      failedFiles.forEach((file) => {
+        uppyRef.current?.retryUpload(file.id);
+        setFiles((prev) =>
+          prev.map((f) =>
+            f.id === file.id
+              ? { ...f, status: "pending", error: undefined }
+              : f,
+          ),
+        );
+      });
+    }
+  };
+
+  const handleClearCompleted = () => {
+    if (uppyRef.current) {
+      const completedFiles = files.filter((f) => f.status === "completed");
+      completedFiles.forEach((file) => {
+        uppyRef.current?.removeFile(file.id);
+      });
+      setFiles((prev) => prev.filter((f) => f.status !== "completed"));
     }
   };
 
@@ -148,169 +177,47 @@ function App() {
     }
   };
 
-  const handleClearAll = () => {
+  const handleRetryFile = (fileId: string) => {
     if (uppyRef.current) {
-      uppyRef.current.cancelAll();
-      setFiles([]);
+      uppyRef.current.retryUpload(fileId);
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.id === fileId ? { ...f, status: "pending", error: undefined } : f,
+        ),
+      );
     }
   };
 
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
-  };
+  const uploadingCount = files.filter((f) => f.status === "uploading").length;
+  const completedCount = files.filter((f) => f.status === "completed").length;
+  const failedCount = files.filter((f) => f.status === "error").length;
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
-      <h1>Uppy Headless Image Uploader Demo</h1>
-
-      <div style={{ marginBottom: "20px" }}>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleFileSelect}
-          style={{ display: "none" }}
-        />
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          style={{
-            padding: "12px 24px",
-            fontSize: "16px",
-            cursor: "pointer",
-            marginRight: "10px",
-          }}
-        >
-          Select Images
-        </button>
-        <button
-          onClick={handleUpload}
-          disabled={files.length === 0}
-          style={{
-            padding: "12px 24px",
-            fontSize: "16px",
-            cursor: files.length === 0 ? "not-allowed" : "pointer",
-            marginRight: "10px",
-          }}
-        >
-          Upload All
-        </button>
-        <button
-          onClick={handleClearAll}
-          disabled={files.length === 0}
-          style={{
-            padding: "12px 24px",
-            fontSize: "16px",
-            cursor: files.length === 0 ? "not-allowed" : "pointer",
-          }}
-        >
-          Clear All
-        </button>
-      </div>
-
-      <div>
-        {files.length === 0 ? (
-          <div style={{ padding: "20px", border: "1px solid #666" }}>
-            No files selected
-          </div>
-        ) : (
-          <div>
-            <h2>Files ({files.length})</h2>
-            {files.map((file) => (
-              <div
-                key={file.id}
-                style={{
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                  padding: "16px",
-                  marginBottom: "12px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                }}
-              >
-                {file.preview && (
-                  <img
-                    src={file.preview}
-                    alt={file.name}
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      objectFit: "cover",
-                      borderRadius: "4px",
-                    }}
-                  />
-                )}
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: "bold", marginBottom: "4px" }}>
-                    {file.name}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      color: "#666",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {formatFileSize(file.size)}
-                  </div>
-                  {file.error ? (
-                    <div style={{ color: "red", fontSize: "14px" }}>
-                      Error: {file.error}
-                    </div>
-                  ) : file.uploadComplete ? (
-                    <div style={{ color: "green", fontSize: "14px" }}>
-                      ✓ Upload complete
-                    </div>
-                  ) : file.progress > 0 ? (
-                    <div>
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "8px",
-                          backgroundColor: "#eee",
-                          borderRadius: "4px",
-                          overflow: "hidden",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: `${file.progress}%`,
-                            height: "100%",
-                            backgroundColor: "#4CAF50",
-                            transition: "width 0.3s ease",
-                          }}
-                        />
-                      </div>
-                      <div style={{ fontSize: "14px", marginTop: "4px" }}>
-                        {file.progress}%
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-                <button
-                  onClick={() => handleRemoveFile(file.id)}
-                  style={{
-                    padding: "8px 16px",
-                    cursor: "pointer",
-                    backgroundColor: "#ff4444",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                  }}
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <Dashboard
+        dropZoneProps={{
+          onFilesDropped: handleFilesDropped,
+          accept: "image/*",
+          multiple: true,
+          maxSize: 10 * 1024 * 1024,
+        }}
+        fileQueueProps={{
+          files,
+          onRemove: handleRemoveFile,
+          onRetry: handleRetryFile,
+        }}
+        actionButtonsProps={{
+          fileCount: files.length,
+          uploadingCount,
+          completedCount,
+          failedCount,
+          onUploadAll: handleUploadAll,
+          onCancelAll: handleCancelAll,
+          onRetryFailed: handleRetryFailed,
+          onClearCompleted: handleClearCompleted,
+        }}
+      />
+    </DndProvider>
   );
 }
 
