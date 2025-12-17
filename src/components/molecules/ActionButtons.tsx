@@ -1,5 +1,5 @@
-import { Button } from "../atoms/Button";
-import { Icon } from "../atoms/Icon";
+import { Button } from "@/components/atoms/Button";
+import { Icon } from "@/components/atoms/Icon";
 
 export interface ActionButtonsProps {
   fileCount: number;

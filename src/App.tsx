@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import Uppy from "@uppy/core";
 import XHRUpload from "@uppy/xhr-upload";
 import ThumbnailGenerator from "@uppy/thumbnail-generator";
-import { Dashboard } from "./components/templates/Dashboard";
-import type { FileCardProps } from "./components/molecules/FileCard";
+import { Dashboard } from "@/components/templates/Dashboard";
+import type { FileCardProps } from "@/components/molecules/FileCard";
 import "./App.css";
 
 type FileStatus = "pending" | "uploading" | "completed" | "error";

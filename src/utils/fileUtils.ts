@@ -1,4 +1,4 @@
-import type { FileType } from "../types/fileTypes";
+import type { FileType } from "@/types/fileTypes";
 
 export const getAcceptString = (type: FileType): string => {
   switch (type) {

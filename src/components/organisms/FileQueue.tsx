@@ -1,5 +1,5 @@
-import type { FileType } from "../../types/fileTypes";
-import { FileCard, type FileCardProps } from "../molecules/FileCard";
+import type { FileType } from "@/types/fileTypes";
+import { FileCard, type FileCardProps } from "@/components/molecules/FileCard";
 
 export interface FileQueueProps {
   files: Omit<FileCardProps, "onRemove" | "onRetry">[];

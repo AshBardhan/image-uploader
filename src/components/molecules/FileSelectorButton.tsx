@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { clsx } from "clsx";
-import { Button } from "../atoms/Button";
-import { Icon } from "../atoms/Icon";
-import type { FileType } from "../../types/fileTypes";
+import { Button } from "@/components/atoms/Button";
+import { Icon } from "@/components/atoms/Icon";
+import type { FileType } from "@/types/fileTypes";
 
 export interface FileSelectorButtonProps {
   onFilesSelected: (files: FileList) => void;

@@ -1,9 +1,9 @@
-import { Button } from "../atoms/Button";
-import { Icon } from "../atoms/Icon";
-import { Badge } from "../atoms/Badge";
-import { ProgressBar } from "../atoms/ProgressBar";
+import { Button } from "@/components/atoms/Button";
+import { Icon } from "@/components/atoms/Icon";
+import { Badge } from "@/components/atoms/Badge";
+import { ProgressBar } from "@/components/atoms/ProgressBar";
 import { clsx } from "clsx";
-import { formatFileSize } from "../../utils/fileUtils";
+import { formatFileSize } from "@/utils/fileUtils";
 
 export interface FileCardProps {
   id: string;

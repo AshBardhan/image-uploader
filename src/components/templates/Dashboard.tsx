@@ -1,12 +1,12 @@
 import {
   FileUploader,
   type FileUploaderProps,
-} from "../organisms/FileUploader";
-import { FileQueue, type FileQueueProps } from "../organisms/FileQueue";
+} from "@/components/organisms/FileUploader";
+import { FileQueue, type FileQueueProps } from "@/components/organisms/FileQueue";
 import {
   ActionButtons,
   type ActionButtonsProps,
-} from "../molecules/ActionButtons";
+} from "@/components/molecules/ActionButtons";
 
 export interface DashboardProps {
   fileUploaderProps: FileUploaderProps;

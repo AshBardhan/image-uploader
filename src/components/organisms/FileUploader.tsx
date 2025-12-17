@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { clsx } from "clsx";
-import { Icon } from "../atoms/Icon";
-import { FileSelectorButton } from "../molecules/FileSelectorButton";
-import { getAcceptString, getFileTypes } from "../../utils/fileUtils";
-import type { FileType } from "../../types/fileTypes";
+import { Icon } from "@/components/atoms/Icon";
+import { FileSelectorButton } from "@/components/molecules/FileSelectorButton";
+import { getAcceptString, getFileTypes } from "@/utils/fileUtils";
+import type { FileType } from "@/types/fileTypes";
 
 export interface FileUploaderProps {
   onFilesDropped: (files: FileList) => void;
