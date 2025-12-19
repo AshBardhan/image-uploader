@@ -177,24 +177,6 @@ function App() {
     }
   };
 
-  const handleRemoveFile = (fileId: string) => {
-    if (uppyRef.current) {
-      uppyRef.current.removeFile(fileId);
-      setFiles((prev) => prev.filter((f) => f.id !== fileId));
-    }
-  };
-
-  const handleRetryFile = (fileId: string) => {
-    if (uppyRef.current) {
-      uppyRef.current.retryUpload(fileId);
-      setFiles((prev) =>
-        prev.map((f) =>
-          f.id === fileId ? { ...f, status: "pending", error: undefined } : f,
-        ),
-      );
-    }
-  };
-
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
       <div className="flex flex-col gap-8">
@@ -218,8 +200,6 @@ function App() {
         <FileQueue
           files={files}
           type="image"
-          onRemove={handleRemoveFile}
-          onRetry={handleRetryFile}
           onUploadAll={handleUploadAll}
           onCancelAll={handleCancelAll}
           onRetryFailed={handleRetryFailed}

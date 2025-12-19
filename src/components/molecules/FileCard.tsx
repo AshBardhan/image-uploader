@@ -1,112 +1,67 @@
-import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
 import { Badge } from "@/components/atoms/Badge";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
-import { clsx } from "clsx";
-import { formatFileSize } from "@/utils/file";
 import type { File } from "@/types/file";
 import { FILE_STATUS_MAP } from "@/constants/file";
 
-export interface FileCardProps extends File {
-  onRemove: (id: string) => void;
-  onRetry?: (id: string) => void;
-}
-
-export const FileCard = ({
-  id,
-  name,
-  size,
-  preview,
-  progress,
-  status,
-  error,
-  onRemove,
-  onRetry,
-}: FileCardProps) => {
+export const FileCard = ({ name, preview, progress, status, error }: File) => {
   return (
-    <div
-      className={clsx(
-        "flex items-center gap-4 rounded-lg border p-4 transition-all",
-        status === "error"
-          ? "border-red-300 bg-red-50"
-          : "border-gray-200 bg-white",
+    <div className="group relative aspect-square overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 transition-all hover:border-gray-300 hover:shadow-lg">
+      {/* Image taking entire cell space */}
+      {preview ? (
+        <img src={preview} alt={name} className="h-full w-full object-cover" />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">
+          <Icon type="image" className="text-gray-400" size="lg" />
+        </div>
       )}
-    >
-      {/* Preview or Icon */}
-      <div className="flex-shrink-0">
-        {preview ? (
-          <img
-            src={preview}
-            alt={name}
-            className="h-16 w-16 rounded-md object-cover"
-          />
-        ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-md bg-gray-100">
-            <Icon type="image" className="text-gray-500" size="lg" />
-          </div>
-        )}
+
+      {/* Status Badge - Absolute top-right */}
+      <div className="absolute right-2 top-2">
+        <Badge variant={FILE_STATUS_MAP[status].variant}>
+          {FILE_STATUS_MAP[status].label}
+        </Badge>
       </div>
 
-      {/* File Info */}
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center justify-between gap-2">
-          <div className="min-w-0 flex-1">
-            <p className="truncate font-medium text-gray-900">{name}</p>
-            <p className="text-sm text-gray-600">{formatFileSize(size)}</p>
-          </div>
-          <Badge variant={FILE_STATUS_MAP[status].variant}>
-            {FILE_STATUS_MAP[status].label}
-          </Badge>
+      {/* Progress Bar - Absolute bottom-center (only when uploading) */}
+      {status === "uploading" && (
+        <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-3 backdrop-blur-sm">
+          <ProgressBar
+            progress={progress}
+            variant={FILE_STATUS_MAP[status].variant}
+            showPercentage
+          />
         </div>
+      )}
 
-        {/* Progress Bar */}
-        {status === "uploading" && (
-          <div className="mt-2">
-            <ProgressBar
-              progress={progress}
-              variant={FILE_STATUS_MAP[status].variant}
-              showPercentage
-            />
-          </div>
-        )}
-
-        {/* Error Message */}
-        {status === "error" && error && (
-          <div className="mt-2 flex items-center gap-2 text-sm text-red-600">
-            <Icon type="error" size="sm" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        {/* Completed Indicator */}
-        {status === "completed" && (
-          <div className="mt-2 flex items-center gap-2 text-sm text-green-700">
+      {/* Success Message - Absolute bottom-center */}
+      {status === "completed" && (
+        <div className="absolute bottom-0 left-0 right-0 bg-green-600/90 p-3 backdrop-blur-sm">
+          <div className="flex items-center justify-center gap-2 text-sm font-medium text-white">
             <Icon type="check" size="sm" />
             <span>Upload complete</span>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Actions */}
-      <div className="flex items-center gap-2">
-        {status === "error" && onRetry && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onRetry(id)}
-            aria-label="Retry upload"
-          >
-            <Icon type="retry" size="sm" />
-          </Button>
-        )}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onRemove(id)}
-          aria-label="Remove file"
-        >
-          <Icon type="cross" size="sm" />
-        </Button>
+      {/* Error Message - Absolute bottom-center */}
+      {status === "error" && (
+        <div className="absolute bottom-0 left-0 right-0 bg-red-600/90 p-3 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-1 text-center">
+            <div className="flex items-center gap-2 text-sm font-medium text-white">
+              <Icon type="error" size="sm" />
+              <span>Upload failed</span>
+            </div>
+            {error && <p className="text-xs text-white/90">{error}</p>}
+          </div>
+        </div>
+      )}
+
+      {/* File name overlay on hover */}
+      <div className="absolute inset-x-0 top-0 translate-y-[-100%] bg-black/70 p-2 backdrop-blur-sm transition-transform group-hover:translate-y-0">
+        <p className="truncate text-sm font-medium text-white" title={name}>
+          {name}
+        </p>
       </div>
     </div>
   );
