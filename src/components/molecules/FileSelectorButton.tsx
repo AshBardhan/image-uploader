@@ -93,12 +93,7 @@ export const FileSelectorButton = ({
           disabled={disabled}
         />
 
-        <Button
-          onClick={handleClick}
-          disabled={disabled}
-          variant="secondary"
-          className="gap-2"
-        >
+        <Button onClick={handleClick} disabled={disabled} variant="secondary">
           <Icon type="folder" size="sm" />
           Browse {type === "all" ? "file" : type}
           {multiple ? "s" : ""}

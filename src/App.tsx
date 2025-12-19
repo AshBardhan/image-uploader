@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Uppy from "@uppy/core";
 import XHRUpload from "@uppy/xhr-upload";
 import ThumbnailGenerator from "@uppy/thumbnail-generator";
-import { Dashboard } from "@/components/templates/Dashboard";
+import { Dashboard } from "@/components/pages/Dashboard";
 import type { FileCardProps } from "@/components/molecules/FileCard";
 import "./App.css";
 
@@ -256,12 +256,6 @@ function App() {
         type: "image",
         onRemove: handleRemoveFile,
         onRetry: handleRetryFile,
-      }}
-      actionButtonsProps={{
-        fileCount: files.length,
-        uploadingCount,
-        completedCount,
-        failedCount,
         onUploadAll: handleUploadAll,
         onCancelAll: handleCancelAll,
         onRetryFailed: handleRetryFailed,

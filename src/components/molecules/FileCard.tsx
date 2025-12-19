@@ -4,15 +4,9 @@ import { Badge } from "@/components/atoms/Badge";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import { clsx } from "clsx";
 import { formatFileSize } from "@/utils/fileUtils";
+import type { File } from "@/types/fileTypes";
 
-export interface FileCardProps {
-  id: string;
-  name: string;
-  size: number;
-  preview?: string;
-  progress: number;
-  status: "pending" | "uploading" | "completed" | "error";
-  error?: string;
+export interface FileCardProps extends File {
   onRemove: (id: string) => void;
   onRetry?: (id: string) => void;
 }
@@ -118,21 +112,21 @@ export const FileCard = ({
       <div className="flex items-center gap-2">
         {status === "error" && onRetry && (
           <Button
-            variant="danger"
-            size="icon"
+            variant="ghost"
+            size="sm"
             onClick={() => onRetry(id)}
             aria-label="Retry upload"
           >
-            <Icon type="retry" />
+            <Icon type="retry" size="sm" />
           </Button>
         )}
         <Button
-          variant="danger"
-          size="icon"
+          variant="ghost"
+          size="sm"
           onClick={() => onRemove(id)}
           aria-label="Remove file"
         >
-          <Icon type="close" />
+          <Icon type="close" size="sm" />
         </Button>
       </div>
     </div>
