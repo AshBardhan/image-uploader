@@ -5,8 +5,8 @@ import ThumbnailGenerator from "@uppy/thumbnail-generator";
 import type { File, FileUploadStats } from "@/types/file";
 import { Header } from "@/components/templates/Header";
 import { FileUploader } from "@/components/templates/FileUploader";
-import { FileOverallProgress } from "@/components/templates/FileOverallProgress";
-import { FileQueue } from "@/components/templates/FileQueue";
+import { FilesUploadProgress } from "@/components/templates/FilesUploadProgress";
+import { FilesPreview } from "@/components/templates/FilesPreview";
 
 function App() {
   const [files, setFiles] = useState<File[]>([]);
@@ -193,11 +193,11 @@ function App() {
           multiple={true}
         />
 
-        {/* File Upload Overall Progress */}
-        <FileOverallProgress files={files} uploadStats={uploadStats} />
+        {/* Files Upload Overall Progress */}
+        <FilesUploadProgress files={files} uploadStats={uploadStats} />
 
-        {/* File Queue */}
-        <FileQueue
+        {/* Files List Preview */}
+        <FilesPreview
           files={files}
           type="image"
           onUploadAll={handleUploadAll}

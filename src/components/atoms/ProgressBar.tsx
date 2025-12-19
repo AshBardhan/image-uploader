@@ -2,13 +2,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { clsx } from "clsx";
 
 const progressBarWrapperVariants = cva(
-  "relative w-full overflow-hidden rounded-full bg-gray-200",
+  "relative w-full overflow-hidden rounded-full bg-gray-400",
   {
     variants: {
       size: {
-        sm: "h-1",
-        md: "h-2",
-        lg: "h-3",
+        sm: "h-2",
+        md: "h-3",
+        lg: "h-4",
       },
     },
     defaultVariants: {
@@ -18,7 +18,7 @@ const progressBarWrapperVariants = cva(
 );
 
 const progressBarVariants = cva(
-  "h-full rounded-full transition-all duration-300",
+  "absolute top-0 h-full rounded-full transition-all duration-300",
   {
     variants: {
       variant: {
@@ -39,29 +39,26 @@ export interface ProgressBarProps
   extends VariantProps<typeof progressBarVariants> {
   progress: number;
   size?: "sm" | "md" | "lg";
-  className?: string;
   showPercentage?: boolean;
 }
 
 export const ProgressBar = ({
   progress,
   variant,
-  size,
-  className,
+  size = "md",
   showPercentage = false,
 }: ProgressBarProps) => {
   const clampedProgress = Math.min(Math.max(progress, 0), 100);
 
   return (
-    <div className={clsx("w-full", className)}>
-      <div className={clsx(progressBarWrapperVariants({ size }))}>
-        <div
-          className={progressBarVariants({ variant })}
-          style={{ width: `${clampedProgress}%` }}
-        />
-      </div>
-      {showPercentage && (
-        <div className="mt-1 text-right text-xs text-gray-600">
+    <div className={clsx(progressBarWrapperVariants({ size }))}>
+      <div
+        className={progressBarVariants({ variant })}
+        style={{ width: `${clampedProgress}%` }}
+      />
+
+      {showPercentage && size !== "sm" && (
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs text-white">
           {Math.round(clampedProgress)}%
         </div>
       )}

@@ -2,8 +2,9 @@ import type { File, FileType } from "@/types/file";
 import { FileCard } from "@/components/molecules/FileCard";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
+import { FILE_TYPE_MAP } from "@/constants/file";
 
-export interface FileQueueProps {
+export interface FilesPreviewProps {
   files: File[];
   type?: FileType;
   onUploadAll: () => void;
@@ -12,14 +13,14 @@ export interface FileQueueProps {
   onClearCompleted: () => void;
 }
 
-export const FileQueue = ({
+export const FilesPreview = ({
   files,
   type = "all",
   onUploadAll,
   onCancelAll,
   onRetryFailed,
   onClearCompleted,
-}: FileQueueProps) => {
+}: FilesPreviewProps) => {
   const total = files.length;
   const completed = files.filter((f) => f.status === "completed").length;
   const failed = files.filter((f) => f.status === "error").length;
@@ -31,7 +32,10 @@ export const FileQueue = ({
       {total > 0 ? (
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">File Queue ({total})</h2>
+            <h2 className="text-2xl font-bold capitalize">
+              {FILE_TYPE_MAP[type].label}
+              {total ? "s" : ""} ({total})
+            </h2>
             <div className="flex flex-wrap gap-3">
               <Button
                 onClick={onUploadAll}
@@ -79,8 +83,8 @@ export const FileQueue = ({
             </div>
           </div>
 
-          {/* 3-column grid of file cards */}
-          <div className="grid grid-cols-1 gap-1 lg:gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Masonry grid of file cards */}
+          <div className="columns-1 gap-1 lg:columns-3 lg:gap-2">
             {files.map((file) => (
               <FileCard key={file.id} {...file} />
             ))}
@@ -89,7 +93,7 @@ export const FileQueue = ({
       ) : (
         <div className="rounded-lg border-2 border-gray-300 bg-gray-50 p-12 text-center">
           <p className="text-gray-600">
-            No {type === "all" ? "files" : type + "s"} in queue
+            No {type === "all" ? "files" : type + "s"} available for upload.
           </p>
         </div>
       )}

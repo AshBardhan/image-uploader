@@ -4,15 +4,15 @@ import { Icon } from "@/components/atoms/Icon";
 import { formatFileSize } from "@/utils/file";
 import type { File, FileUploadStats } from "@/types/file";
 
-export interface FileOverallProgressProps {
+export interface FilesUploadProgressProps {
   files: File[];
   uploadStats: FileUploadStats;
 }
 
-export const FileOverallProgress = ({
+export const FilesUploadProgress = ({
   files,
   uploadStats,
-}: FileOverallProgressProps) => {
+}: FilesUploadProgressProps) => {
   const formatTime = (seconds: number): string => {
     if (seconds < 60) {
       return `${Math.round(seconds)}s`;
@@ -106,6 +106,7 @@ export const FileOverallProgress = ({
                   : "info"
             }
             size="lg"
+            showPercentage={true}
           />
         </div>
 

@@ -6,12 +6,16 @@ import { FILE_STATUS_MAP } from "@/constants/file";
 
 export const FileCard = ({ name, preview, progress, status, error }: File) => {
   return (
-    <div className="group relative aspect-square overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 transition-all hover:border-gray-300 hover:shadow-lg">
+    <div className="group relative break-inside-avoid overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 transition-all hover:border-gray-300 hover:shadow-lg lg:mb-2">
       {/* Image taking entire cell space */}
       {preview ? (
-        <img src={preview} alt={name} className="h-full w-full object-cover" />
+        <img
+          src={preview}
+          alt={name}
+          className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
       ) : (
-        <div className="flex h-full w-full items-center justify-center">
+        <div className="flex aspect-square w-full items-center justify-center">
           <Icon type="image" className="text-gray-400" size="lg" />
         </div>
       )}
@@ -30,6 +34,7 @@ export const FileCard = ({ name, preview, progress, status, error }: File) => {
             progress={progress}
             variant={FILE_STATUS_MAP[status].variant}
             showPercentage
+            size="sm"
           />
         </div>
       )}
@@ -58,10 +63,8 @@ export const FileCard = ({ name, preview, progress, status, error }: File) => {
       )}
 
       {/* File name overlay on hover */}
-      <div className="absolute inset-x-0 top-0 translate-y-[-100%] bg-black/70 p-2 backdrop-blur-sm transition-transform group-hover:translate-y-0">
-        <p className="truncate text-sm font-medium text-white" title={name}>
-          {name}
-        </p>
+      <div className="absolute inset-x-0 top-0 translate-y-[-100%] bg-black/90 p-2 backdrop-blur-sm transition-transform group-hover:translate-y-0">
+        <div className="truncate text-sm font-medium text-white">{name}</div>
       </div>
     </div>
   );
