@@ -3,10 +3,10 @@ import { clsx } from "clsx";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
 import type { FileType } from "@/types/file";
+import { FILE_TYPE_MAP } from "@/constants/file";
 
 export interface FileSelectorButtonProps {
   onFilesSelected: (files: FileList) => void;
-  accept?: string;
   type?: FileType;
   multiple?: boolean;
   disabled?: boolean;
@@ -15,7 +15,6 @@ export interface FileSelectorButtonProps {
 
 export const FileSelectorButton = ({
   onFilesSelected,
-  accept = "/*",
   type = "all",
   multiple = false,
   disabled = false,
@@ -44,7 +43,7 @@ export const FileSelectorButton = ({
         <input
           ref={fileInputRef}
           type="file"
-          accept={accept}
+          accept={FILE_TYPE_MAP[type].accept}
           multiple={multiple}
           onChange={handleChange}
           className="hidden"
@@ -69,11 +68,11 @@ export const FileSelectorButton = ({
           {/* Text */}
           <div className="flex flex-col items-center gap-2">
             <p className="text-lg font-semibold text-gray-900">
-              Select {type === "all" ? "file" : type}
+              Select {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""}
             </p>
             <p className="text-sm text-gray-600">
-              Tap to browse your {type === "all" ? "file" : type}
+              Tap to browse your {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""}
             </p>
           </div>
@@ -86,7 +85,7 @@ export const FileSelectorButton = ({
         <input
           ref={fileInputRef}
           type="file"
-          accept={accept}
+          accept={FILE_TYPE_MAP[type].accept}
           multiple={multiple}
           onChange={handleChange}
           className="hidden"
@@ -95,7 +94,7 @@ export const FileSelectorButton = ({
 
         <Button onClick={handleClick} disabled={disabled} variant="primary">
           <Icon type="folder" size="sm" />
-          Browse {type === "all" ? "file" : type}
+          Browse {FILE_TYPE_MAP[type].label}
           {multiple ? "s" : ""}
         </Button>
       </div>

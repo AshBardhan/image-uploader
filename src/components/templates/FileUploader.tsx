@@ -98,14 +98,13 @@ export const FileUploader = ({
           {/* Text */}
           <div className="flex flex-col items-center gap-2">
             <p className="text-xl font-semibold text-gray-900">
-              Drop {type === "all" ? "file" : type}
+              Drop {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""} here
             </p>
             <p className="text-gray-600">or use the button below to</p>
             <div className="text-center mb-4">
               <FileSelectorButton
                 onFilesSelected={onFilesDropped}
-                accept={FILE_TYPE_MAP[type].accept}
                 type={type}
                 multiple={multiple}
                 disabled={disabled}
@@ -134,7 +133,6 @@ export const FileUploader = ({
       <div className="w-full">
         <FileSelectorButton
           onFilesSelected={onFilesDropped}
-          accept={FILE_TYPE_MAP[type].accept}
           type={type}
           multiple={multiple}
           disabled={disabled}

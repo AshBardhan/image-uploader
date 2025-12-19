@@ -1,4 +1,4 @@
-import type { FileStatus } from "@/types/file";
+import type { FileStatus, FileType } from "@/types/file";
 
 interface FileStatusInfo {
   label: string;
@@ -26,16 +26,18 @@ export const FILE_STATUS_MAP: Record<FileStatus, FileStatusInfo> = {
 };
 
 interface FileTypeInfo {
+  label: string;
   format: string;
   accept: string;
 }
 
-export const FILE_TYPE_MAP: Record<string, FileTypeInfo> = {
-  image: { format: "JPG, PNG, GIF", accept: "image/*" },
-  video: { format: "MP4, AVI, MOV", accept: "video/*" },
+export const FILE_TYPE_MAP: Record<FileType, FileTypeInfo> = {
+  image: { label:"image", format: "JPG, PNG, GIF", accept: "image/*" },
+  video: { label:"video", format: "MP4, AVI, MOV", accept: "video/*" },
   document: {
+    label:"document",
     format: "PDF, DOC, XLS",
     accept: ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt",
   },
-  all: { format: "All Files", accept: "*/*" },
+  all: { label:"files", format: "All Files", accept: "*/*" },
 };
