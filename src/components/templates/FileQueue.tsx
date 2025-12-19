@@ -1,8 +1,9 @@
-import type { File, FileType } from "@/types/fileTypes";
+import type { File, FileStatus, FileType } from "@/types/file";
 import { FileCard } from "@/components/molecules/FileCard";
 import { Button } from "@/components/atoms/Button";
 import { clsx } from "clsx";
 import { Icon } from "@/components/atoms/Icon";
+import { FILE_STATUS_MAP } from "@/constants/file";
 
 export interface FileQueueProps {
   files: File[];
@@ -30,24 +31,18 @@ export const FileQueue = ({
   const uploadingFiles = files.filter((f) => f.status === "uploading");
   const pendingFiles = files.filter((f) => f.status === "pending");
 
-  const renderSection = (
-    title: string,
-    sectionFiles: File[],
-    variant: "default" | "info" | "success" | "error",
-  ) => {
+  const renderSection = (sectionFiles: File[], status: FileStatus) => {
     if (sectionFiles.length === 0) return null;
-
-    const colors = {
-      default: "text-gray-700",
-      info: "text-blue-500",
-      success: "text-green-700",
-      error: "text-red-500",
-    };
 
     return (
       <div className="space-y-3">
-        <h3 className={clsx("text-xl font-semibold", colors[variant])}>
-          {title} ({sectionFiles.length})
+        <h3
+          className={clsx(
+            "text-xl font-semibold",
+            FILE_STATUS_MAP[status].color,
+          )}
+        >
+          {FILE_STATUS_MAP[status].label} ({sectionFiles.length})
         </h3>
         <div className="space-y-3">
           {sectionFiles.map((file) => (
@@ -75,45 +70,42 @@ export const FileQueue = ({
                 disabled={
                   pendingFiles.length === 0 || uploadingFiles.length > 0
                 }
-                variant="success"
+                variant="primary"
               >
                 <Icon type="upload" size="sm" />
                 Upload All ({pendingFiles.length})
               </Button>
 
-              {uploadingFiles.length > 0 && (
-                <Button onClick={onCancelAll} variant="danger">
-                  <Icon type="close" size="sm" />
-                  Cancel Upload
-                </Button>
-              )}
-
               {failedFiles.length > 0 && (
-                <Button onClick={onRetryFailed} variant="secondary">
+                <Button onClick={onRetryFailed} variant="danger">
                   <Icon type="retry" size="sm" />
                   Retry Failed ({failedFiles.length})
                 </Button>
               )}
 
               {completedFiles.length > 0 && (
-                <Button onClick={onClearCompleted} variant="danger">
+                <Button onClick={onClearCompleted} variant="outline">
                   <Icon type="trash" size="sm" />
                   Clear Completed ({completedFiles.length})
                 </Button>
               )}
 
-              {files.length > 0 && uploadingFiles.length === 0 && (
-                <Button onClick={onCancelAll} variant="danger">
-                  <Icon type="trash" size="sm" />
-                  Clear All
+              {pendingFiles.length > 0 && (
+                <Button
+                  onClick={onCancelAll}
+                  variant="outline"
+                  disabled={uploadingFiles.length > 0}
+                >
+                  <Icon type="cross" size="sm" />
+                  Cancel
                 </Button>
               )}
             </div>
           </div>
-          {renderSection("Uploading", uploadingFiles, "info")}
-          {renderSection("Pending", pendingFiles, "default")}
-          {renderSection("Failed", failedFiles, "error")}
-          {renderSection("Completed", completedFiles, "success")}
+          {renderSection(uploadingFiles, "uploading")}
+          {renderSection(pendingFiles, "pending")}
+          {renderSection(failedFiles, "error")}
+          {renderSection(completedFiles, "completed")}
         </div>
       ) : (
         <div className="rounded-lg border-2 border-gray-300 bg-gray-50 p-12 text-center">

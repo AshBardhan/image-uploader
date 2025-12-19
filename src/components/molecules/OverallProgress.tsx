@@ -1,7 +1,7 @@
 import { clsx } from "clsx";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import { Icon } from "@/components/atoms/Icon";
-import { formatFileSize } from "@/utils/fileUtils";
+import { formatFileSize } from "@/utils/file";
 
 export interface OverallProgressProps {
   totalFiles: number;

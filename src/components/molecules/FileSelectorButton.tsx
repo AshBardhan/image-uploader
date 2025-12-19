@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { clsx } from "clsx";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
-import type { FileType } from "@/types/fileTypes";
+import type { FileType } from "@/types/file";
 
 export interface FileSelectorButtonProps {
   onFilesSelected: (files: FileList) => void;
@@ -93,7 +93,7 @@ export const FileSelectorButton = ({
           disabled={disabled}
         />
 
-        <Button onClick={handleClick} disabled={disabled} variant="secondary">
+        <Button onClick={handleClick} disabled={disabled} variant="primary">
           <Icon type="folder" size="sm" />
           Browse {type === "all" ? "file" : type}
           {multiple ? "s" : ""}

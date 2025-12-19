@@ -3,8 +3,9 @@ import { Icon } from "@/components/atoms/Icon";
 import { Badge } from "@/components/atoms/Badge";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import { clsx } from "clsx";
-import { formatFileSize } from "@/utils/fileUtils";
-import type { File } from "@/types/fileTypes";
+import { formatFileSize } from "@/utils/file";
+import type { File } from "@/types/file";
+import { FILE_STATUS_MAP } from "@/constants/file";
 
 export interface FileCardProps extends File {
   onRemove: (id: string) => void;
@@ -22,30 +23,6 @@ export const FileCard = ({
   onRemove,
   onRetry,
 }: FileCardProps) => {
-  const getStatusBadge = () => {
-    switch (status) {
-      case "pending":
-        return <Badge variant="default">Pending</Badge>;
-      case "uploading":
-        return <Badge variant="info">Uploading</Badge>;
-      case "completed":
-        return <Badge variant="success">Completed</Badge>;
-      case "error":
-        return <Badge variant="error">Failed</Badge>;
-    }
-  };
-
-  const getProgressVariant = () => {
-    switch (status) {
-      case "completed":
-        return "success";
-      case "error":
-        return "error";
-      default:
-        return "default";
-    }
-  };
-
   return (
     <div
       className={clsx(
@@ -77,7 +54,9 @@ export const FileCard = ({
             <p className="truncate font-medium text-gray-900">{name}</p>
             <p className="text-sm text-gray-600">{formatFileSize(size)}</p>
           </div>
-          {getStatusBadge()}
+          <Badge variant={FILE_STATUS_MAP[status].variant}>
+            {FILE_STATUS_MAP[status].label}
+          </Badge>
         </div>
 
         {/* Progress Bar */}
@@ -85,7 +64,7 @@ export const FileCard = ({
           <div className="mt-2">
             <ProgressBar
               progress={progress}
-              variant={getProgressVariant()}
+              variant={FILE_STATUS_MAP[status].variant}
               showPercentage
             />
           </div>
@@ -126,7 +105,7 @@ export const FileCard = ({
           onClick={() => onRemove(id)}
           aria-label="Remove file"
         >
-          <Icon type="close" size="sm" />
+          <Icon type="cross" size="sm" />
         </Button>
       </div>
     </div>

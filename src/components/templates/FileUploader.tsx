@@ -2,8 +2,8 @@ import { useState } from "react";
 import { clsx } from "clsx";
 import { Icon } from "@/components/atoms/Icon";
 import { FileSelectorButton } from "@/components/molecules/FileSelectorButton";
-import { getAcceptString, getFileTypes } from "@/utils/fileUtils";
-import type { FileType } from "@/types/fileTypes";
+import type { FileType } from "@/types/file";
+import { FILE_TYPE_MAP } from "@/constants/file";
 
 export interface FileUploaderProps {
   onFilesDropped: (files: FileList) => void;
@@ -105,7 +105,7 @@ export const FileUploader = ({
             <div className="text-center mb-4">
               <FileSelectorButton
                 onFilesSelected={onFilesDropped}
-                accept={getAcceptString(type)}
+                accept={FILE_TYPE_MAP[type].accept}
                 type={type}
                 multiple={multiple}
                 disabled={disabled}
@@ -114,7 +114,7 @@ export const FileUploader = ({
             <p className="text-sm text-gray-500">
               {type !== "all" && (
                 <>
-                  <strong>Supports:</strong> {getFileTypes(type)}&nbsp;
+                  <strong>Supports:</strong> {FILE_TYPE_MAP[type].format}&nbsp;
                 </>
               )}
               (Max {maxSize / (1024 * 1024)}MB)
@@ -134,7 +134,7 @@ export const FileUploader = ({
       <div className="w-full">
         <FileSelectorButton
           onFilesSelected={onFilesDropped}
-          accept={getAcceptString(type)}
+          accept={FILE_TYPE_MAP[type].accept}
           type={type}
           multiple={multiple}
           disabled={disabled}

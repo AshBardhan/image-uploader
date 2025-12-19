@@ -1,5 +1,4 @@
 export type FileType = "image" | "video" | "document" | "all";
-
 export type FileStatus = "pending" | "uploading" | "completed" | "error";
 
 export interface File {

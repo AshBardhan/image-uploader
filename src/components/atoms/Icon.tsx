@@ -16,7 +16,7 @@ export type IconType =
   | "image"
   | "check"
   | "error"
-  | "close"
+  | "cross"
   | "trash"
   | "retry"
   | "mobile"
@@ -40,7 +40,7 @@ const iconMap: Record<IconType, LucideIcon> = {
   image: Image,
   check: Check,
   error: AlertCircle,
-  close: X,
+  cross: X,
   trash: Trash2,
   retry: RotateCw,
   mobile: Smartphone,
