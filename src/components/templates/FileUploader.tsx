@@ -98,7 +98,7 @@ export const FileUploader = ({
           {/* Text */}
           <div className="flex flex-col items-center gap-2">
             <p className="text-xl font-semibold text-gray-900">
-              Drop {type}
+              Drop {type === "all" ? "file" : type}
               {multiple ? "s" : ""} here
             </p>
             <p className="text-gray-600">or use the button below to</p>
@@ -111,14 +111,14 @@ export const FileUploader = ({
                 disabled={disabled}
               />
             </div>
-            <p className="text-sm text-gray-500">
-              {type !== "all" && (
-                <>
-                  <strong>Supports:</strong> {FILE_TYPE_MAP[type].format}&nbsp;
-                </>
-              )}
-              (Max {maxSize / (1024 * 1024)}MB)
-            </p>
+            <div className="space-y-0.5">
+              <p className="text-sm text-gray-500">
+                <strong>Supports:</strong> {FILE_TYPE_MAP[type].format}
+              </p>
+              <p className="text-sm text-gray-500">
+                <strong>Limit:</strong> {maxSize / (1024 * 1024)}MB per file
+              </p>
+            </div>
           </div>
         </div>
 

@@ -2,25 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import Uppy from "@uppy/core";
 import XHRUpload from "@uppy/xhr-upload";
 import ThumbnailGenerator from "@uppy/thumbnail-generator";
-import { Dashboard } from "@/components/pages/Dashboard";
-import type { FileCardProps } from "@/components/molecules/FileCard";
-import "./App.css";
-
-type FileStatus = "pending" | "uploading" | "completed" | "error";
-
-interface FileWithPreview extends Omit<FileCardProps, "onRemove" | "onRetry"> {
-  status: FileStatus;
-  uploadedBytes?: number;
-}
-
-interface UploadStats {
-  startTime: number;
-  totalBytesUploaded: number;
-}
+import type { File, FileUploadStats } from "@/types/file";
+import { Header } from "@/components/templates/Header";
+import { FileUploader } from "@/components/templates/FileUploader";
+import { FileOverallProgress } from "@/components/templates/FileOverallProgress";
+import { FileQueue } from "@/components/templates/FileQueue";
 
 function App() {
-  const [files, setFiles] = useState<FileWithPreview[]>([]);
-  const [uploadStats, setUploadStats] = useState<UploadStats>({
+  const [files, setFiles] = useState<File[]>([]);
+  const [uploadStats, setUploadStats] = useState<FileUploadStats>({
     startTime: 0,
     totalBytesUploaded: 0,
   });
@@ -58,7 +48,7 @@ function App() {
         upload_preset: "ash-test-upload",
       });
 
-      const newFile: FileWithPreview = {
+      const newFile: File = {
         id: file.id,
         name: file.name,
         size: file.size || 0,
@@ -205,73 +195,38 @@ function App() {
     }
   };
 
-  const uploadingCount = files.filter((f) => f.status === "uploading").length;
-  const completedCount = files.filter((f) => f.status === "completed").length;
-  const failedCount = files.filter((f) => f.status === "error").length;
-
-  // Calculate overall progress metrics
-  const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
-  const uploadedBytes = files.reduce((sum, file) => {
-    if (file.status === "completed") {
-      return sum + file.size;
-    } else if (file.status === "uploading" && file.uploadedBytes) {
-      return sum + file.uploadedBytes;
-    }
-    return sum;
-  }, 0);
-
-  const overallProgress =
-    totalBytes > 0 ? Math.round((uploadedBytes / totalBytes) * 100) : 0;
-
-  // Calculate estimated time remaining
-  const calculateETA = (): number | undefined => {
-    if (uploadingCount === 0 || uploadStats.startTime === 0) {
-      return undefined;
-    }
-
-    const elapsedTime = (Date.now() - uploadStats.startTime) / 1000; // in seconds
-    const remainingBytes = totalBytes - uploadedBytes;
-
-    if (uploadedBytes === 0 || elapsedTime === 0) {
-      return undefined;
-    }
-
-    const uploadSpeed = uploadedBytes / elapsedTime; // bytes per second
-    const estimatedTimeRemaining = remainingBytes / uploadSpeed;
-
-    return estimatedTimeRemaining;
-  };
-
-  const estimatedTimeRemaining = calculateETA();
-
   return (
-    <Dashboard
-      fileUploaderProps={{
-        onFilesDropped: handleFilesDropped,
-        type: "image",
-        multiple: true,
-      }}
-      fileQueueProps={{
-        files,
-        type: "image",
-        onRemove: handleRemoveFile,
-        onRetry: handleRetryFile,
-        onUploadAll: handleUploadAll,
-        onCancelAll: handleCancelAll,
-        onRetryFailed: handleRetryFailed,
-        onClearCompleted: handleClearCompleted,
-      }}
-      overallProgressProps={{
-        totalFiles: files.length,
-        completedFiles: completedCount,
-        uploadingFiles: uploadingCount,
-        failedFiles: failedCount,
-        totalBytes,
-        uploadedBytes,
-        overallProgress,
-        estimatedTimeRemaining,
-      }}
-    />
+    <div className="mx-auto max-w-6xl px-6 py-8">
+      <div className="flex flex-col gap-8">
+        {/* Header */}
+        <Header
+          title="Image Uploader"
+          description="Upload your images to Cloudinary with drag & drop or browse"
+        />
+
+        {/* File DnD Uploader */}
+        <FileUploader
+          type="image"
+          onFilesDropped={handleFilesDropped}
+          multiple={true}
+        />
+
+        {/* File Upload Overall Progress */}
+        <FileOverallProgress files={files} uploadStats={uploadStats} />
+
+        {/* File Queue */}
+        <FileQueue
+          files={files}
+          type="image"
+          onRemove={handleRemoveFile}
+          onRetry={handleRetryFile}
+          onUploadAll={handleUploadAll}
+          onCancelAll={handleCancelAll}
+          onRetryFailed={handleRetryFailed}
+          onClearCompleted={handleClearCompleted}
+        />
+      </div>
+    </div>
   );
 }
 

@@ -2,28 +2,17 @@ import { clsx } from "clsx";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import { Icon } from "@/components/atoms/Icon";
 import { formatFileSize } from "@/utils/file";
+import type { File, FileUploadStats } from "@/types/file";
 
-export interface OverallProgressProps {
-  totalFiles: number;
-  completedFiles: number;
-  uploadingFiles: number;
-  failedFiles: number;
-  totalBytes: number;
-  uploadedBytes: number;
-  overallProgress: number;
-  estimatedTimeRemaining?: number; // in seconds
+export interface FileOverallProgressProps {
+  files: File[];
+  uploadStats: FileUploadStats;
 }
 
-export const OverallProgress = ({
-  totalFiles,
-  completedFiles,
-  uploadingFiles,
-  failedFiles,
-  totalBytes,
-  uploadedBytes,
-  overallProgress,
-  estimatedTimeRemaining,
-}: OverallProgressProps) => {
+export const FileOverallProgress = ({
+  files,
+  uploadStats,
+}: FileOverallProgressProps) => {
   const formatTime = (seconds: number): string => {
     if (seconds < 60) {
       return `${Math.round(seconds)}s`;
@@ -38,8 +27,49 @@ export const OverallProgress = ({
     }
   };
 
+  const totalFiles = files.length;
+  const completedFiles = files.filter((f) => f.status === "completed").length;
+  const failedFiles = files.filter((f) => f.status === "error").length;
+  const uploadingFiles = files.filter((f) => f.status === "uploading").length;
+
   const isUploading = uploadingFiles > 0;
   const hasErrors = failedFiles > 0;
+
+  const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
+  const uploadedBytes = files.reduce((sum, file) => {
+    if (file.status === "completed") {
+      return sum + file.size;
+    } else if (file.status === "uploading" && file.uploadedBytes) {
+      return sum + file.uploadedBytes;
+    }
+    return sum;
+  }, 0);
+  const uploadProgress =
+    totalBytes > 0 ? Math.round((uploadedBytes / totalBytes) * 100) : 0;
+
+  const calculateETA = (): number => {
+    if (uploadingFiles === 0 || uploadStats.startTime === 0) {
+      return 0;
+    }
+
+    const elapsedTime = (Date.now() - uploadStats.startTime) / 1000; // in seconds
+    const remainingBytes = totalBytes - uploadedBytes;
+
+    if (uploadedBytes === 0 || elapsedTime === 0) {
+      return 0;
+    }
+
+    const uploadSpeed = uploadedBytes / elapsedTime; // bytes per second
+    const estimatedTimeRemaining = remainingBytes / uploadSpeed;
+
+    return estimatedTimeRemaining;
+  };
+
+  const estimatedTimeRemaining = calculateETA();
+
+  if (uploadedBytes === 0) {
+    return null;
+  }
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -57,7 +87,7 @@ export const OverallProgress = ({
                 hasErrors && !isUploading && "text-amber-600",
               )}
             />
-            Overall Progress
+            Overall File Upload Progress
           </h3>
           <div className="text-sm font-medium text-gray-600">
             {completedFiles} / {totalFiles} files
@@ -67,7 +97,7 @@ export const OverallProgress = ({
         {/* Progress Bar */}
         <div>
           <ProgressBar
-            progress={overallProgress}
+            progress={uploadProgress}
             variant={
               hasErrors && !isUploading
                 ? "error"
@@ -114,18 +144,16 @@ export const OverallProgress = ({
           )}
 
           {/* Estimated Time */}
-          {estimatedTimeRemaining !== undefined &&
-            estimatedTimeRemaining > 0 &&
-            isUploading && (
-              <div className="flex flex-col">
-                <span className="text-xs text-gray-500 uppercase tracking-wide">
-                  Time Left
-                </span>
-                <span className="text-sm font-semibold text-gray-900">
-                  ~{formatTime(estimatedTimeRemaining)}
-                </span>
-              </div>
-            )}
+          {estimatedTimeRemaining > 0 && isUploading && (
+            <div className="flex flex-col">
+              <span className="text-xs text-gray-500 uppercase tracking-wide">
+                Time Left
+              </span>
+              <span className="text-sm font-semibold text-gray-900">
+                ~{formatTime(estimatedTimeRemaining)}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Status Message */}
