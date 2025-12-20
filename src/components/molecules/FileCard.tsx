@@ -6,7 +6,7 @@ import { FILE_STATUS_MAP } from "@/constants/file";
 
 export const FileCard = ({ name, preview, progress, status, error }: File) => {
   return (
-    <div className="group relative break-inside-avoid overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 transition-all hover:border-gray-300 hover:shadow-lg lg:mb-2">
+    <div className="group relative mb-2 break-inside-avoid overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 transition-all hover:border-gray-300 hover:shadow-lg sm:mb-3 lg:mb-2">
       {/* Image taking entire cell space */}
       {preview ? (
         <img
@@ -24,7 +24,7 @@ export const FileCard = ({ name, preview, progress, status, error }: File) => {
       )}
 
       {/* Status Badge - Absolute top-right */}
-      <div className="absolute right-2 top-2">
+      <div className="absolute right-1 top-1 sm:right-2 sm:top-2">
         <Badge
           variant={FILE_STATUS_MAP[status].variant}
           ariaLabel={`Status: ${FILE_STATUS_MAP[status].label}`}
@@ -35,7 +35,7 @@ export const FileCard = ({ name, preview, progress, status, error }: File) => {
 
       {/* Progress Bar - Absolute bottom-center (only when uploading) */}
       {status === "uploading" && (
-        <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-3 backdrop-blur-sm">
+        <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-2 backdrop-blur-sm sm:p-3">
           <ProgressBar
             progress={progress}
             variant={FILE_STATUS_MAP[status].variant}
@@ -48,7 +48,7 @@ export const FileCard = ({ name, preview, progress, status, error }: File) => {
       {/* Success Message - Absolute bottom-center */}
       {status === "completed" && (
         <div
-          className="absolute bottom-0 left-0 right-0 bg-green-600/90 p-3 backdrop-blur-sm"
+          className="absolute bottom-0 left-0 right-0 bg-green-600/90 p-2 backdrop-blur-sm sm:p-3"
           role="status"
           aria-live="polite"
         >
@@ -62,7 +62,7 @@ export const FileCard = ({ name, preview, progress, status, error }: File) => {
       {/* Error Message - Absolute bottom-center */}
       {status === "error" && (
         <div
-          className="absolute bottom-0 left-0 right-0 bg-red-600/90 p-3 backdrop-blur-sm"
+          className="absolute bottom-0 left-0 right-0 bg-red-600/90 p-2 backdrop-blur-sm sm:p-3"
           role="alert"
           aria-live="assertive"
         >
@@ -71,14 +71,18 @@ export const FileCard = ({ name, preview, progress, status, error }: File) => {
               <Icon type="error" size="sm" />
               <span>Upload failed</span>
             </div>
-            {error && <p className="text-xs text-white/90">{error}</p>}
+            <div className="text-xs text-white/90">
+              {error || "Please retry again."}
+            </div>
           </div>
         </div>
       )}
 
       {/* File name overlay on hover */}
       <div className="absolute inset-x-0 top-0 translate-y-[-100%] bg-black/90 p-2 backdrop-blur-sm transition-transform group-hover:translate-y-0">
-        <div className="truncate text-sm font-medium text-white">{name}</div>
+        <div className="truncate text-xs sm:text-sm font-medium text-white">
+          {name}
+        </div>
       </div>
     </div>
   );

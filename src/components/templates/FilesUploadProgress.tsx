@@ -1,7 +1,7 @@
-import { clsx } from "clsx";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import { Icon } from "@/components/atoms/Icon";
 import { formatFileSize } from "@/utils/file";
+import { formatTime } from "@/utils/time";
 import type { File, FileUploadStats } from "@/types/file";
 
 export interface FilesUploadProgressProps {
@@ -13,24 +13,11 @@ export const FilesUploadProgress = ({
   files,
   uploadStats,
 }: FilesUploadProgressProps) => {
-  const formatTime = (seconds: number): string => {
-    if (seconds < 60) {
-      return `${Math.round(seconds)}s`;
-    } else if (seconds < 3600) {
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.round(seconds % 60);
-      return `${mins}m ${secs}s`;
-    } else {
-      const hours = Math.floor(seconds / 3600);
-      const mins = Math.floor((seconds % 3600) / 60);
-      return `${hours}h ${mins}m`;
-    }
-  };
-
   const totalFiles = files.length;
   const completedFiles = files.filter((f) => f.status === "completed").length;
   const failedFiles = files.filter((f) => f.status === "error").length;
   const uploadingFiles = files.filter((f) => f.status === "uploading").length;
+  const pendingFiles = files.filter((f) => f.status === "pending").length;
 
   const isUploading = uploadingFiles > 0;
   const hasErrors = failedFiles > 0;
@@ -48,13 +35,15 @@ export const FilesUploadProgress = ({
     totalBytes > 0 ? Math.round((uploadedBytes / totalBytes) * 100) : 0;
 
   const calculateETA = (): number => {
-    if (uploadingFiles === 0 || uploadStats.startTime === 0) {
+    // Return 0 if not uploading or has errors (upload stopped)
+    if (uploadingFiles === 0 || uploadStats.startTime === 0 || hasErrors) {
       return 0;
     }
 
     const elapsedTime = (Date.now() - uploadStats.startTime) / 1000; // in seconds
     const remainingBytes = totalBytes - uploadedBytes;
 
+    // Return 0 if can't calculate yet
     if (uploadedBytes === 0 || elapsedTime === 0) {
       return 0;
     }
@@ -67,29 +56,18 @@ export const FilesUploadProgress = ({
 
   const estimatedTimeRemaining = calculateETA();
 
-  if (uploadedBytes === 0) {
+  if (uploadedBytes === 0 || pendingFiles > 0) {
     return null;
   }
 
   return (
-    <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-950 flex items-center gap-2">
-            <Icon
-              type="upload"
-              size="md"
-              className={clsx(
-                isUploading && "text-blue-700 animate-pulse",
-                !isUploading &&
-                  completedFiles === totalFiles &&
-                  "text-green-700",
-                hasErrors && !isUploading && "text-amber-700",
-              )}
-            />
+    <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <h3 className="text-base font-semibold text-gray-950 sm:text-lg">
             Overall File Upload Progress
           </h3>
-          <div className="text-sm font-medium text-gray-800">
+          <div className="text-xs font-medium text-gray-800 sm:text-sm">
             {completedFiles} / {totalFiles} files
           </div>
         </div>
@@ -111,7 +89,7 @@ export const FilesUploadProgress = ({
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+        <div className="grid grid-cols-2 gap-3 pt-2 sm:gap-4 lg:grid-cols-4">
           {/* Uploaded Bytes */}
           <div className="flex flex-col">
             <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
@@ -132,6 +110,18 @@ export const FilesUploadProgress = ({
             </span>
           </div>
 
+          {/* Estimated Time - Show only when > 0 */}
+          {estimatedTimeRemaining > 0 && (
+            <div className="flex flex-col">
+              <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
+                Time Left
+              </span>
+              <span className="text-sm font-semibold text-gray-950">
+                {formatTime(estimatedTimeRemaining)}
+              </span>
+            </div>
+          )}
+
           {/* Failed */}
           {failedFiles > 0 && (
             <div className="flex flex-col">
@@ -143,29 +133,17 @@ export const FilesUploadProgress = ({
               </span>
             </div>
           )}
-
-          {/* Estimated Time */}
-          {estimatedTimeRemaining > 0 && isUploading && (
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
-                Time Left
-              </span>
-              <span className="text-sm font-semibold text-gray-950">
-                ~{formatTime(estimatedTimeRemaining)}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Status Message */}
         {isUploading && (
           <div
-            className="flex items-center gap-2 text-sm text-blue-800 font-medium"
+            className="flex items-center gap-2 text-xs font-medium text-blue-800 sm:text-sm"
             role="status"
             aria-live="polite"
           >
             <div
-              className="w-2 h-2 bg-blue-800 rounded-full animate-pulse"
+              className="h-2 w-2 animate-pulse rounded-full bg-blue-800"
               aria-hidden="true"
             />
             <span>Uploading files...</span>
@@ -174,7 +152,7 @@ export const FilesUploadProgress = ({
 
         {!isUploading && completedFiles === totalFiles && totalFiles > 0 && (
           <div
-            className="flex items-center gap-2 text-sm text-green-800 font-medium"
+            className="flex items-center gap-2 text-xs font-medium text-green-800 sm:text-sm"
             role="status"
             aria-live="polite"
           >
@@ -185,7 +163,7 @@ export const FilesUploadProgress = ({
 
         {hasErrors && !isUploading && (
           <div
-            className="flex items-center gap-2 text-sm text-amber-800 font-medium"
+            className="flex items-center gap-2 text-xs font-medium text-amber-800 sm:text-sm"
             role="alert"
             aria-live="assertive"
           >

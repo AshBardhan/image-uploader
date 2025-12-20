@@ -31,7 +31,6 @@ export const FileSelectorButton = ({
     if (files && files.length > 0) {
       onFilesSelected(files);
     }
-    // Reset input
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -57,7 +56,7 @@ export const FileSelectorButton = ({
           tabIndex={disabled ? -1 : 0}
           aria-label={`Select ${FILE_TYPE_MAP[type].label}${multiple ? "s" : ""}`}
           className={clsx(
-            "w-full rounded-lg border-2 p-8 transition-all",
+            "w-full rounded-lg border-2 p-6 transition-all sm:p-8",
             "border-gray-300 bg-gray-50",
             "flex flex-col items-center justify-center gap-4",
             disabled && "cursor-not-allowed opacity-50",
@@ -65,17 +64,17 @@ export const FileSelectorButton = ({
           )}
         >
           {/* Icon */}
-          <div className="rounded-full p-6 bg-gray-600">
+          <div className="rounded-full bg-gray-600 p-4 sm:p-6">
             <Icon type="upload" size="xl" className="text-white" />
           </div>
 
           {/* Text */}
           <div className="flex flex-col items-center gap-2">
-            <p className="text-lg font-semibold text-gray-950">
+            <p className="text-base font-semibold text-gray-950 sm:text-lg">
               Select {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""}
             </p>
-            <p className="text-sm text-gray-800">
+            <p className="text-xs text-gray-800 sm:text-sm">
               Tap to browse your {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""}
             </p>

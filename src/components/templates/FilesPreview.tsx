@@ -30,43 +30,55 @@ export const FilesPreview = ({
   return (
     <>
       {total > 0 ? (
-        <section className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold capitalize text-gray-950">
+        <section className="flex flex-col gap-4 sm:gap-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-xl font-bold capitalize text-gray-950 sm:text-2xl">
               {FILE_TYPE_MAP[type].label}
               {total ? "s" : ""} ({total})
             </h2>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               <Button
                 onClick={onUploadAll}
                 disabled={pending === 0 || uploading > 0}
                 variant="primary"
+                size="sm"
               >
                 <Icon type="upload" size="sm" />
-                Upload{" "}
-                {pending > 0
-                  ? pending === total
-                    ? "All"
-                    : `(${pending})`
-                  : ""}
+                <span className="hidden sm:inline">
+                  Upload
+                  {pending > 0
+                    ? pending === total
+                      ? " All"
+                      : ` (${pending})`
+                    : ""}
+                </span>
+                <span className="sm:hidden">
+                  Upload{pending > 0 ? ` (${pending})` : ""}
+                </span>
               </Button>
 
               {failed > 0 && (
-                <Button onClick={onRetryFailed} variant="danger">
+                <Button onClick={onRetryFailed} variant="danger" size="sm">
                   <Icon type="retry" size="sm" />
-                  Retry Failed ({failed})
+                  <span className="hidden sm:inline">
+                    Retry Failed ({failed})
+                  </span>
+                  <span className="sm:hidden">Retry ({failed})</span>
                 </Button>
               )}
 
               {completed > 0 && (
-                <Button onClick={onClearCompleted} variant="outline">
+                <Button onClick={onClearCompleted} variant="outline" size="sm">
                   <Icon type="trash" size="sm" />
-                  Clear Completed{" "}
-                  {completed > 0
-                    ? completed === total
-                      ? "All"
-                      : `(${completed})`
-                    : ""}
+                  <span className="hidden sm:inline">
+                    Clear Completed
+                    {completed > 0
+                      ? completed === total
+                        ? " All"
+                        : ` (${completed})`
+                      : ""}
+                  </span>
+                  <span className="sm:hidden">Clear ({completed})</span>
                 </Button>
               )}
 
@@ -74,9 +86,9 @@ export const FilesPreview = ({
                 <Button
                   onClick={onCancelAll}
                   variant="outline"
+                  size="sm"
                   disabled={uploading > 0}
                 >
-                  <Icon type="cross" size="sm" />
                   Cancel
                 </Button>
               )}
@@ -84,7 +96,7 @@ export const FilesPreview = ({
           </div>
 
           {/* Masonry grid of file cards */}
-          <div className="columns-1 gap-1 lg:columns-3 lg:gap-2" role="list">
+          <div className="columns-1 gap-2 sm:columns-2 sm:gap-3 lg:columns-3 lg:gap-4">
             {files.map((file) => (
               <div key={file.id}>
                 <FileCard {...file} />
