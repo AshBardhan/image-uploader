@@ -6,11 +6,11 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gray-200 text-gray-800",
-        success: "bg-green-100 text-green-800",
-        error: "bg-red-100 text-red-800",
-        warning: "bg-yellow-100 text-yellow-800",
-        info: "bg-blue-100 text-blue-800",
+        default: "bg-gray-300 text-gray-900",
+        success: "bg-green-200 text-green-900",
+        error: "bg-red-200 text-red-900",
+        warning: "bg-yellow-200 text-yellow-900",
+        info: "bg-blue-200 text-blue-900",
       },
     },
     defaultVariants: {
@@ -22,11 +22,24 @@ const badgeVariants = cva(
 export interface BadgeProps extends VariantProps<typeof badgeVariants> {
   children: React.ReactNode;
   className?: string;
+  ariaLabel?: string;
 }
 
-export const Badge = ({ children, variant, className }: BadgeProps) => {
+export const Badge = ({
+  children,
+  variant,
+  className,
+  ariaLabel,
+}: BadgeProps) => {
+  const a11yProps = {
+    role: ariaLabel && "status",
+    "aria-label": ariaLabel,
+  };
   return (
-    <span className={clsx(badgeVariants({ variant, className }))}>
+    <span
+      className={clsx(badgeVariants({ variant, className }))}
+      {...a11yProps}
+    >
       {children}
     </span>
   );

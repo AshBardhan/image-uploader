@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { clsx } from "clsx";
 
 const progressBarWrapperVariants = cva(
-  "relative w-full overflow-hidden rounded-full bg-gray-400",
+  "relative w-full overflow-hidden rounded-full bg-gray-300",
   {
     variants: {
       size: {
@@ -22,11 +22,11 @@ const progressBarVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary-600",
-        info: "bg-blue-600",
-        success: "bg-green-600",
-        error: "bg-red-600",
-        warning: "bg-yellow-600",
+        default: "bg-blue-700",
+        info: "bg-blue-700",
+        success: "bg-green-700",
+        error: "bg-red-700",
+        warning: "bg-yellow-700",
       },
     },
     defaultVariants: {

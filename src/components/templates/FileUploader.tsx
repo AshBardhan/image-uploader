@@ -71,13 +71,16 @@ export const FileUploader = ({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        role="region"
+        aria-label="File upload drop zone"
         className={clsx(
           "relative rounded-lg border-2 border-dashed p-12 transition-all",
           isDragging
-            ? "border-primary-600 bg-primary-100"
+            ? "border-blue-600 bg-blue-50"
             : "border-gray-300 bg-gray-50",
           disabled && "cursor-not-allowed opacity-50",
-          !disabled && "hover:border-primary-400 hover:bg-primary-100",
+          !disabled &&
+            "hover:border-blue-400 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
         )}
       >
         <div className="flex flex-col items-center justify-center gap-6 text-center">
@@ -85,8 +88,9 @@ export const FileUploader = ({
           <div
             className={clsx(
               "rounded-full p-6 transition-colors",
-              isDragging ? "bg-primary-500" : "bg-gray-600",
+              isDragging ? "bg-blue-600" : "bg-gray-700",
             )}
+            aria-hidden="true"
           >
             <Icon
               type="upload"
@@ -97,11 +101,11 @@ export const FileUploader = ({
 
           {/* Text */}
           <div className="flex flex-col items-center gap-2">
-            <p className="text-xl font-semibold text-gray-900">
+            <p className="text-xl font-semibold text-gray-950">
               Drop {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""} here
             </p>
-            <p className="text-gray-600">or use the button below to</p>
+            <p className="text-gray-800">or use the button below to</p>
             <div className="text-center mb-4">
               <FileSelectorButton
                 onFilesSelected={onFilesDropped}
@@ -111,10 +115,10 @@ export const FileUploader = ({
               />
             </div>
             <div className="space-y-0.5">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-700">
                 <strong>Supports:</strong> {FILE_TYPE_MAP[type].format}
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-700">
                 <strong>Limit:</strong> {maxSize / (1024 * 1024)}MB per file
               </p>
             </div>
@@ -123,7 +127,10 @@ export const FileUploader = ({
 
         {/* Drag Overlay */}
         {isDragging && (
-          <div className="pointer-events-none absolute inset-0 rounded-lg bg-primary-200/30" />
+          <div
+            className="pointer-events-none absolute inset-0 rounded-lg bg-blue-200/30"
+            aria-hidden="true"
+          />
         )}
       </div>
     );

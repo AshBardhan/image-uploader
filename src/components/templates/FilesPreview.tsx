@@ -30,9 +30,9 @@ export const FilesPreview = ({
   return (
     <>
       {total > 0 ? (
-        <div className="flex flex-col gap-6">
+        <section className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold capitalize">
+            <h2 className="text-2xl font-bold capitalize text-gray-950">
               {FILE_TYPE_MAP[type].label}
               {total ? "s" : ""} ({total})
             </h2>
@@ -84,15 +84,17 @@ export const FilesPreview = ({
           </div>
 
           {/* Masonry grid of file cards */}
-          <div className="columns-1 gap-1 lg:columns-3 lg:gap-2">
+          <div className="columns-1 gap-1 lg:columns-3 lg:gap-2" role="list">
             {files.map((file) => (
-              <FileCard key={file.id} {...file} />
+              <div key={file.id}>
+                <FileCard {...file} />
+              </div>
             ))}
           </div>
-        </div>
+        </section>
       ) : (
-        <div className="rounded-lg border-2 border-gray-300 bg-gray-50 p-12 text-center">
-          <p className="text-gray-600">
+        <div className="rounded-lg border-2 border-gray-400 bg-gray-50 p-12 text-center">
+          <p className="text-gray-800">
             No {type === "all" ? "files" : type + "s"} available for upload.
           </p>
         </div>

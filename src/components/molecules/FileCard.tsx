@@ -11,18 +11,24 @@ export const FileCard = ({ name, preview, progress, status, error }: File) => {
       {preview ? (
         <img
           src={preview}
-          alt={name}
+          alt={`Preview of ${name}`}
           className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
       ) : (
-        <div className="flex aspect-square w-full items-center justify-center">
+        <div
+          className="flex aspect-square w-full items-center justify-center"
+          aria-label="No preview available"
+        >
           <Icon type="image" className="text-gray-400" size="lg" />
         </div>
       )}
 
       {/* Status Badge - Absolute top-right */}
       <div className="absolute right-2 top-2">
-        <Badge variant={FILE_STATUS_MAP[status].variant}>
+        <Badge
+          variant={FILE_STATUS_MAP[status].variant}
+          ariaLabel={`Status: ${FILE_STATUS_MAP[status].label}`}
+        >
           {FILE_STATUS_MAP[status].label}
         </Badge>
       </div>
@@ -41,7 +47,11 @@ export const FileCard = ({ name, preview, progress, status, error }: File) => {
 
       {/* Success Message - Absolute bottom-center */}
       {status === "completed" && (
-        <div className="absolute bottom-0 left-0 right-0 bg-green-600/90 p-3 backdrop-blur-sm">
+        <div
+          className="absolute bottom-0 left-0 right-0 bg-green-600/90 p-3 backdrop-blur-sm"
+          role="status"
+          aria-live="polite"
+        >
           <div className="flex items-center justify-center gap-2 text-sm font-medium text-white">
             <Icon type="check" size="sm" />
             <span>Upload complete</span>
@@ -51,7 +61,11 @@ export const FileCard = ({ name, preview, progress, status, error }: File) => {
 
       {/* Error Message - Absolute bottom-center */}
       {status === "error" && (
-        <div className="absolute bottom-0 left-0 right-0 bg-red-600/90 p-3 backdrop-blur-sm">
+        <div
+          className="absolute bottom-0 left-0 right-0 bg-red-600/90 p-3 backdrop-blur-sm"
+          role="alert"
+          aria-live="assertive"
+        >
           <div className="flex flex-col items-center gap-1 text-center">
             <div className="flex items-center gap-2 text-sm font-medium text-white">
               <Icon type="error" size="sm" />

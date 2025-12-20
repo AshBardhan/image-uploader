@@ -72,24 +72,24 @@ export const FilesUploadProgress = ({
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+    <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-gray-950 flex items-center gap-2">
             <Icon
               type="upload"
               size="md"
               className={clsx(
-                isUploading && "text-blue-600 animate-pulse",
+                isUploading && "text-blue-700 animate-pulse",
                 !isUploading &&
                   completedFiles === totalFiles &&
-                  "text-green-600",
-                hasErrors && !isUploading && "text-amber-600",
+                  "text-green-700",
+                hasErrors && !isUploading && "text-amber-700",
               )}
             />
             Overall File Upload Progress
           </h3>
-          <div className="text-sm font-medium text-gray-600">
+          <div className="text-sm font-medium text-gray-800">
             {completedFiles} / {totalFiles} files
           </div>
         </div>
@@ -114,20 +114,20 @@ export const FilesUploadProgress = ({
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
           {/* Uploaded Bytes */}
           <div className="flex flex-col">
-            <span className="text-xs text-gray-500 uppercase tracking-wide">
+            <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
               Uploaded
             </span>
-            <span className="text-sm font-semibold text-gray-900">
+            <span className="text-sm font-semibold text-gray-950">
               {formatFileSize(uploadedBytes)} / {formatFileSize(totalBytes)}
             </span>
           </div>
 
           {/* Uploading */}
           <div className="flex flex-col">
-            <span className="text-xs text-gray-500 uppercase tracking-wide">
+            <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
               Uploading
             </span>
-            <span className="text-sm font-semibold text-blue-600">
+            <span className="text-sm font-semibold text-blue-700">
               {uploadingFiles} file{uploadingFiles !== 1 ? "s" : ""}
             </span>
           </div>
@@ -135,10 +135,10 @@ export const FilesUploadProgress = ({
           {/* Failed */}
           {failedFiles > 0 && (
             <div className="flex flex-col">
-              <span className="text-xs text-gray-500 uppercase tracking-wide">
+              <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
                 Failed
               </span>
-              <span className="text-sm font-semibold text-red-600">
+              <span className="text-sm font-semibold text-red-700">
                 {failedFiles} file{failedFiles !== 1 ? "s" : ""}
               </span>
             </div>
@@ -147,10 +147,10 @@ export const FilesUploadProgress = ({
           {/* Estimated Time */}
           {estimatedTimeRemaining > 0 && isUploading && (
             <div className="flex flex-col">
-              <span className="text-xs text-gray-500 uppercase tracking-wide">
+              <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
                 Time Left
               </span>
-              <span className="text-sm font-semibold text-gray-900">
+              <span className="text-sm font-semibold text-gray-950">
                 ~{formatTime(estimatedTimeRemaining)}
               </span>
             </div>
@@ -159,21 +159,36 @@ export const FilesUploadProgress = ({
 
         {/* Status Message */}
         {isUploading && (
-          <div className="flex items-center gap-2 text-sm text-blue-600">
-            <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
+          <div
+            className="flex items-center gap-2 text-sm text-blue-800 font-medium"
+            role="status"
+            aria-live="polite"
+          >
+            <div
+              className="w-2 h-2 bg-blue-800 rounded-full animate-pulse"
+              aria-hidden="true"
+            />
             <span>Uploading files...</span>
           </div>
         )}
 
         {!isUploading && completedFiles === totalFiles && totalFiles > 0 && (
-          <div className="flex items-center gap-2 text-sm text-green-600">
+          <div
+            className="flex items-center gap-2 text-sm text-green-800 font-medium"
+            role="status"
+            aria-live="polite"
+          >
             <Icon type="check" size="sm" />
             <span>All files uploaded successfully!</span>
           </div>
         )}
 
         {hasErrors && !isUploading && (
-          <div className="flex items-center gap-2 text-sm text-amber-600">
+          <div
+            className="flex items-center gap-2 text-sm text-amber-800 font-medium"
+            role="alert"
+            aria-live="assertive"
+          >
             <Icon type="error" size="sm" />
             <span>
               {failedFiles} file{failedFiles !== 1 ? "s" : ""} failed to upload
@@ -181,6 +196,6 @@ export const FilesUploadProgress = ({
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };

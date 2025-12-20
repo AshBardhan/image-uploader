@@ -26,6 +26,7 @@ interface IconProps {
   type: IconType;
   className?: string;
   size?: "sm" | "md" | "lg" | "xl";
+  ariaLabel?: string;
 }
 
 const sizeMap = {
@@ -47,12 +48,25 @@ const iconMap: Record<IconType, LucideIcon> = {
   folder: Folder,
 };
 
-export const Icon = ({ type, className, size = "md" }: IconProps) => {
+export const Icon = ({
+  type,
+  className,
+  size = "md",
+  ariaLabel,
+}: IconProps) => {
   const IconComponent = iconMap[type];
 
   if (!IconComponent) {
     return null;
   }
 
-  return <IconComponent size={sizeMap[size]} className={className} />;
+  const a11yProps = {
+    role: ariaLabel ? "img" : "presentation",
+    "aria-label": ariaLabel,
+    "aria-hidden": !ariaLabel,
+  };
+
+  return (
+    <IconComponent size={sizeMap[size]} className={className} {...a11yProps} />
+  );
 };

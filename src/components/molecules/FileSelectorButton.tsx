@@ -48,10 +48,14 @@ export const FileSelectorButton = ({
           onChange={handleChange}
           className="hidden"
           disabled={disabled}
+          aria-hidden="true"
         />
-        <button
+        <div
+          role="button"
+          aria-disabled={disabled}
           onClick={handleClick}
-          disabled={disabled}
+          tabIndex={disabled ? -1 : 0}
+          aria-label={`Select ${FILE_TYPE_MAP[type].label}${multiple ? "s" : ""}`}
           className={clsx(
             "w-full rounded-lg border-2 p-8 transition-all",
             "border-gray-300 bg-gray-50",
@@ -67,16 +71,16 @@ export const FileSelectorButton = ({
 
           {/* Text */}
           <div className="flex flex-col items-center gap-2">
-            <p className="text-lg font-semibold text-gray-900">
+            <p className="text-lg font-semibold text-gray-950">
               Select {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""}
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-800">
               Tap to browse your {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""}
             </p>
           </div>
-        </button>
+        </div>
       </div>
     );
   } else {
