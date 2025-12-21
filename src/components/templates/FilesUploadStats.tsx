@@ -6,15 +6,12 @@ import { formatFileSize } from "@/utils/file";
 import { formatTime } from "@/utils/time";
 import type { File, FileUploadTime } from "@/types/file";
 
-export interface FilesUploadProgressProps {
+export interface FilesUploadStatsProps {
   files: File[];
   time: FileUploadTime;
 }
 
-export const FilesUploadProgress = ({
-  files,
-  time,
-}: FilesUploadProgressProps) => {
+export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
   const { start, current } = time;
   const totalFiles = files.length;
   const completedFiles = files.filter((f) => f.status === "completed").length;

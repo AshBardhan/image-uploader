@@ -5,7 +5,7 @@ import ThumbnailGenerator from "@uppy/thumbnail-generator";
 import type { File, FileUploadTime } from "@/types/file";
 import { Header } from "@/components/templates/Header";
 import { FileUploader } from "@/components/templates/FileUploader";
-import { FilesUploadProgress } from "@/components/templates/FilesUploadProgress";
+import { FilesUploadStats } from "@/components/templates/FilesUploadStats";
 import { FilesPreview } from "@/components/templates/FilesPreview";
 
 function App() {
@@ -201,7 +201,7 @@ function App() {
         />
 
         {/* Files Upload Overall Progress */}
-        <FilesUploadProgress files={files} time={uploadTime} />
+        <FilesUploadStats files={files} time={uploadTime} />
 
         {/* Files List Preview */}
         <FilesPreview
