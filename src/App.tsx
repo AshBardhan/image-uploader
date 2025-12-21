@@ -17,7 +17,11 @@ function App() {
         />
 
         {/* File Uploader */}
-        <FileUploader type="image" multiple onFilesDropped={actions.addFiles} />
+        <FileUploader
+          type="image"
+          multiple
+          onFilesSelected={actions.addFiles}
+        />
 
         {/* Files Upload Overall Progress */}
         <FilesUploadStats files={files} time={time} />

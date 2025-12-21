@@ -6,7 +6,7 @@ import type { FileType } from "@/types/file";
 import { FILE_TYPE_MAP } from "@/constants/file";
 
 export interface FileUploaderProps {
-  onFilesDropped: (files: FileList) => void;
+  onFilesSelected: (files: FileList) => void;
   type?: FileType;
   multiple?: boolean;
   disabled?: boolean;
@@ -14,7 +14,7 @@ export interface FileUploaderProps {
 }
 
 export const FileUploader = ({
-  onFilesDropped,
+  onFilesSelected,
   type = "all",
   multiple = false,
   disabled = false,
@@ -60,7 +60,7 @@ export const FileUploader = ({
     setIsDragging(false);
 
     if (!disabled && e.dataTransfer.files) {
-      onFilesDropped(e.dataTransfer.files);
+      onFilesSelected(e.dataTransfer.files);
     }
   };
 
@@ -109,7 +109,7 @@ export const FileUploader = ({
               or use the button below to
             </p>
             <FileSelectorButton
-              onFilesSelected={onFilesDropped}
+              onFilesSelected={onFilesSelected}
               type={type}
               multiple={multiple}
               disabled={disabled}
@@ -139,7 +139,7 @@ export const FileUploader = ({
     return (
       <div className="w-full">
         <FileSelectorButton
-          onFilesSelected={onFilesDropped}
+          onFilesSelected={onFilesSelected}
           type={type}
           multiple={multiple}
           disabled={disabled}

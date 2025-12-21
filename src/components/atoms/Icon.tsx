@@ -1,8 +1,10 @@
 import {
   Upload,
   Image,
+  Info,
   Check,
-  AlertCircle,
+  CircleX,
+  TriangleAlert,
   X,
   Trash2,
   RotateCw,
@@ -15,8 +17,10 @@ import { cn } from "@/utils/style";
 export type IconType =
   | "upload"
   | "image"
+  | "info"
   | "check"
   | "error"
+  | "warning"
   | "cross"
   | "trash"
   | "retry"
@@ -41,8 +45,10 @@ const sizeMap = {
 const iconMap: Record<IconType, LucideIcon> = {
   upload: Upload,
   image: Image,
+  info: Info,
   check: Check,
-  error: AlertCircle,
+  error: CircleX,
+  warning: TriangleAlert,
   cross: X,
   trash: Trash2,
   retry: RotateCw,
