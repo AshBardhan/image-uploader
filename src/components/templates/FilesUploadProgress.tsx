@@ -1,3 +1,4 @@
+import { Text } from "@/components/atoms/Text";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import { Metric } from "@/components/molecules/Metric";
 import { Icon } from "@/components/atoms/Icon";
@@ -63,9 +64,7 @@ export const FilesUploadProgress = ({
   return (
     <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
       <div className="space-y-3 sm:space-y-4">
-        <h3 className="text-base font-semibold text-gray-950 sm:text-lg">
-          Overall File Upload Progress
-        </h3>
+        <Text variant="h4">Overall File Upload Progress</Text>
 
         {/* Progress Bar */}
         <div>

@@ -1,4 +1,5 @@
 import type { File, FileType } from "@/types/file";
+import { Text } from "@/components/atoms/Text";
 import { FileCard } from "@/components/molecules/FileCard";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
@@ -32,10 +33,10 @@ export const FilesPreview = ({
       {total > 0 ? (
         <section className="flex flex-col gap-4 sm:gap-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-xl font-bold capitalize text-gray-950 sm:text-2xl">
+            <Text variant="h3" className="capitalize">
               {FILE_TYPE_MAP[type].label}
               {total ? "s" : ""} ({total})
-            </h2>
+            </Text>
             <div className="flex flex-wrap gap-2 sm:gap-3">
               <Button
                 onClick={onUploadAll}
@@ -108,9 +109,9 @@ export const FilesPreview = ({
         </section>
       ) : (
         <div className="rounded-lg border-2 border-gray-400 bg-gray-50 p-12 text-center">
-          <p className="text-gray-800">
+          <Text variant="p">
             No {type === "all" ? "files" : type + "s"} available for upload.
-          </p>
+          </Text>
         </div>
       )}
     </>

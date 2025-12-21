@@ -56,20 +56,20 @@ export const FileSelectorButton = ({
           tabIndex={disabled ? -1 : 0}
           aria-label={`Select ${FILE_TYPE_MAP[type].label}${multiple ? "s" : ""}`}
           className={clsx(
-            "w-full rounded-lg border-2 p-6 transition-all sm:p-8",
+            "w-full rounded-lg border-2 p-4 transition-all sm:p-6",
             "border-gray-300 bg-gray-50",
-            "flex flex-col items-center justify-center gap-4",
+            "flex flex-col items-center justify-center gap-2 sm:gap-4",
             disabled && "cursor-not-allowed opacity-50",
             !disabled && "hover:border-primary-400 hover:bg-primary-100",
           )}
         >
           {/* Icon */}
           <div className="rounded-full bg-gray-600 p-4 sm:p-6">
-            <Icon type="upload" size="xl" className="text-white" />
+            <Icon type="upload" size="lg" className="text-white" />
           </div>
 
           {/* Text */}
-          <div className="flex flex-col items-center gap-2">
+          <div className="space-y-1 text-center">
             <p className="text-base font-semibold text-gray-950 sm:text-lg">
               Select {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""}
@@ -94,7 +94,6 @@ export const FileSelectorButton = ({
           className="hidden"
           disabled={disabled}
         />
-
         <Button onClick={handleClick} disabled={disabled} variant="primary">
           <Icon type="folder" size="sm" />
           Browse {FILE_TYPE_MAP[type].label}

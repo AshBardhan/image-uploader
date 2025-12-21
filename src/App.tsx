@@ -183,7 +183,7 @@ function App() {
         {/* Header */}
         <Header
           title="Image Uploader"
-          description="Upload your images to Cloudinary with drag & drop or browse"
+          description="Upload your images to Cloudinary server"
         />
 
         {/* File DnD Uploader */}

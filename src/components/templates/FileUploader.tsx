@@ -74,7 +74,7 @@ export const FileUploader = ({
         role="region"
         aria-label="File upload drop zone"
         className={clsx(
-          "relative rounded-lg border-2 border-dashed p-6 transition-all sm:p-8 md:p-12",
+          "relative rounded-lg border-2 border-dashed p-4 transition-all sm:p-6 md:p-8",
           isDragging
             ? "border-blue-600 bg-blue-50"
             : "border-gray-300 bg-gray-50",
@@ -83,47 +83,45 @@ export const FileUploader = ({
             "hover:border-blue-400 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
         )}
       >
-        <div className="flex flex-col items-center justify-center gap-4 text-center sm:gap-6">
-          {/* Icon */}
-          <div
-            className={clsx(
-              "rounded-full p-4 transition-colors sm:p-6",
-              isDragging ? "bg-blue-600" : "bg-gray-700",
-            )}
-            aria-hidden="true"
-          >
-            <Icon
-              type="upload"
-              size="xl"
-              className="transition-colors text-white"
-            />
-          </div>
+        <div className="flex flex-col items-center justify-center gap-2 sm:gap-4 text-center">
+          <div className="space-y-2">
+            <div
+              className={clsx(
+                "rounded-full p-4 transition-colors sm:p-6 inline-flex",
+                isDragging ? "bg-blue-600" : "bg-gray-700",
+              )}
+              aria-hidden="true"
+            >
+              <Icon
+                type="upload"
+                size="xl"
+                className="transition-colors text-white"
+              />
+            </div>
 
-          {/* Text */}
-          <div className="flex flex-col items-center gap-2">
             <p className="text-base font-semibold text-gray-950 sm:text-lg md:text-xl">
               Drop {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""} here
             </p>
+          </div>
+          <div className="space-y-1">
             <p className="text-sm text-gray-800 sm:text-base">
               or use the button below to
             </p>
-            <div className="text-center mb-4">
-              <FileSelectorButton
-                onFilesSelected={onFilesDropped}
-                type={type}
-                multiple={multiple}
-                disabled={disabled}
-              />
-            </div>
-            <div className="space-y-0.5">
-              <p className="text-xs text-gray-700 sm:text-sm">
-                <strong>Supports:</strong> {FILE_TYPE_MAP[type].format}
-              </p>
-              <p className="text-xs text-gray-700 sm:text-sm">
-                <strong>Limit:</strong> {maxSize / (1024 * 1024)}MB per file
-              </p>
-            </div>
+            <FileSelectorButton
+              onFilesSelected={onFilesDropped}
+              type={type}
+              multiple={multiple}
+              disabled={disabled}
+            />
+          </div>
+          <div className="space-y-0.5">
+            <p className="text-xs text-gray-700 sm:text-sm">
+              <strong>Supports:</strong> {FILE_TYPE_MAP[type].format}
+            </p>
+            <p className="text-xs text-gray-700 sm:text-sm">
+              <strong>Limit:</strong> {maxSize / (1024 * 1024)}MB per file
+            </p>
           </div>
         </div>
 
