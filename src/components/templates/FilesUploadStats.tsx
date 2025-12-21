@@ -20,7 +20,8 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
   const uploadingFiles = files.filter((f) => f.status === "uploading").length;
 
   const isUploading = uploadingFiles > 0;
-  const hasErrors = failedFiles > 0;
+  const hasFailed = failedFiles > 0;
+  const isUploadComplete = completedFiles === totalFiles;
 
   const bytesTotal = files.reduce((sum, file) => sum + file.size, 0);
   const bytesUploaded = files.reduce(
@@ -36,7 +37,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
       return 0;
     }
 
-    if (uploadProgress === 100 || (hasErrors && !isUploading)) {
+    if (uploadProgress === 100 || (hasFailed && !isUploading)) {
       return 0;
     }
 
@@ -49,107 +50,101 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
 
   const timeLeft = calculateETA();
 
-  // Hide if no active upload states (only pending or no files)
+  // Hide if no active upload states
   if (uploadingFiles === 0 && completedFiles === 0 && failedFiles === 0) {
     return null;
-  }
-
-  // Hide if there are pending files alongside completed/failed files
-  // (user added new files after previous upload finished)
-  if (pendingFiles > 0 && (completedFiles > 0 || failedFiles > 0)) {
-    return null;
+  } else {
+    // Hide if there are pending files alongside completed/failed files
+    // (user added new files after previous upload finished)
+    if (pendingFiles > 0) {
+      return null;
+    }
   }
 
   return (
     <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
-      <div className="space-y-3 sm:space-y-4">
-        <Text variant="h4">Overall File Upload Progress</Text>
-
-        {/* Progress Bar */}
-        <div>
+      {(isUploading || totalFiles > completedFiles + failedFiles) && (
+        <div className="space-y-3 sm:space-y-4">
+          <Text variant="h4" role="status" aria-live="polite">
+            {hasFailed ? "Re-uploading" : "Uploading"} Files
+          </Text>
+          {/* Progress Bar */}
           <ProgressBar
             progress={uploadProgress}
             variant={
-              hasErrors && !isUploading
+              hasFailed && !isUploading
                 ? "error"
-                : completedFiles === totalFiles && totalFiles > 0
+                : isUploadComplete && totalFiles > 0
                   ? "success"
                   : "info"
             }
             size="lg"
             showPercentage={true}
           />
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {/* Uploaded Bytes */}
-          <Metric
-            label="Data"
-            direction="column"
-            size="small"
-            value={`${formatFileSize(bytesUploaded)}/${formatFileSize(bytesTotal)}`}
-          />
-
-          {/* Files Uploaded */}
-          <Metric
-            label="Uploaded"
-            direction="column"
-            size="small"
-            value={`${completedFiles}/${totalFiles}`}
-          />
-
-          {/* Estimated Time to Complete */}
-          {timeLeft > 0 && (
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {/* Uploaded Bytes */}
             <Metric
-              className="ml-0 sm:ml-auto"
-              label="Time Left"
+              label="Data"
               direction="column"
               size="small"
-              value={`approx. ${formatTime(timeLeft)}`}
+              value={`${formatFileSize(bytesUploaded)}/${formatFileSize(bytesTotal)}`}
             />
-          )}
+
+            {/* Files Uploaded */}
+            <Metric
+              label="Uploaded"
+              direction="column"
+              size="small"
+              value={`${completedFiles}/${totalFiles}`}
+            />
+
+            {/* Estimated Time to Complete */}
+            {timeLeft > 0 && (
+              <Metric
+                className="ml-0 sm:ml-auto"
+                label="Time Left"
+                direction="column"
+                size="small"
+                value={`approx. ${formatTime(timeLeft)}`}
+              />
+            )}
+          </div>
         </div>
+      )}
 
-        {/* Status Message */}
-        {isUploading && (
-          <div
-            className="flex items-center gap-2 text-xs font-medium text-blue-800 sm:text-sm"
-            role="status"
-            aria-live="polite"
-          >
-            <div
-              className="h-2 w-2 animate-pulse rounded-full bg-blue-800"
-              aria-hidden="true"
-            />
-            <span>Uploading files...</span>
+      {/* Status Message */}
+      {!isUploading && isUploadComplete && (
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Icon type="check" size="xl" className="text-green-500" />
+          <div>
+            <Text variant="h4" theme="success" role="status" aria-live="polite">
+              All files uploaded successfully
+            </Text>
+            <Text className="text-xs">Please clear the completed files</Text>
           </div>
-        )}
+        </div>
+      )}
 
-        {!isUploading && completedFiles === totalFiles && (
-          <div
-            className="flex items-center gap-2 text-xs font-medium text-green-800 sm:text-sm"
-            role="status"
-            aria-live="polite"
-          >
-            <Icon type="check" size="sm" />
-            <span>All files uploaded successfully!</span>
-          </div>
-        )}
+      {hasFailed && !isUploading && (
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Icon type="error" size="xl" className="text-red-500" />
+          <div>
+            <Text
+              variant="h4"
+              theme="danger"
+              role="alert"
+              aria-live="assertive"
+            >
+              Unable to upload files
+            </Text>
 
-        {hasErrors && !isUploading && (
-          <div
-            className="flex items-center gap-2 text-xs font-medium text-amber-800 sm:text-sm"
-            role="alert"
-            aria-live="assertive"
-          >
-            <Icon type="error" size="sm" />
-            <span>
-              {failedFiles} file{failedFiles > 1 ? "s" : ""} failed to upload
-            </span>
+            <Text className="text-xs">
+              Please retry to upload again after some time
+            </Text>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 };

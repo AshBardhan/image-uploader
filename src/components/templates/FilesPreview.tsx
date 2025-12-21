@@ -45,24 +45,14 @@ export const FilesPreview = ({
                 size="sm"
               >
                 <Icon type="upload" size="sm" />
-                <span className="hidden sm:inline">
-                  Upload
-                  {pending > 0
-                    ? pending === total
-                      ? " All"
-                      : ` (${pending})`
-                    : ""}
-                </span>
-                <span className="sm:hidden">
-                  Upload{pending > 0 ? ` (${pending})` : ""}
-                </span>
+                Upload
               </Button>
 
               {failed > 0 && (
                 <Button onClick={onRetryFailed} variant="danger" size="sm">
                   <Icon type="retry" size="sm" />
                   <span className="hidden sm:inline">
-                    Retry Failed ({failed})
+                    Retry Failed {failed !== total ? ` (${failed})` : ""}
                   </span>
                   <span className="sm:hidden">Retry ({failed})</span>
                 </Button>
@@ -73,26 +63,20 @@ export const FilesPreview = ({
                   <Icon type="trash" size="sm" />
                   <span className="hidden sm:inline">
                     Clear Completed
-                    {completed > 0
-                      ? completed === total
-                        ? " All"
-                        : ` (${completed})`
-                      : ""}
+                    {completed !== total ? ` (${completed})` : ""}
                   </span>
                   <span className="sm:hidden">Clear ({completed})</span>
                 </Button>
               )}
 
-              {pending > 0 && (
-                <Button
-                  onClick={onCancelAll}
-                  variant="outline"
-                  size="sm"
-                  disabled={uploading > 0}
-                >
-                  Cancel
-                </Button>
-              )}
+              <Button
+                onClick={onCancelAll}
+                variant="outline"
+                size="sm"
+                disabled={pending > 0 || uploading > 0}
+              >
+                Cancel
+              </Button>
             </div>
           </div>
 

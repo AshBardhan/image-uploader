@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { clsx } from "clsx";
+import { cn } from "@/utils/style";
 import { Icon } from "@/components/atoms/Icon";
 import { FileSelectorButton } from "@/components/molecules/FileSelectorButton";
 import type { FileType } from "@/types/file";
@@ -73,7 +73,7 @@ export const FileUploader = ({
         onDrop={handleDrop}
         role="region"
         aria-label="File upload drop zone"
-        className={clsx(
+        className={cn(
           "relative rounded-lg border-2 border-dashed p-4 transition-all sm:p-6 md:p-8",
           isDragging
             ? "border-blue-600 bg-blue-50"
@@ -86,7 +86,7 @@ export const FileUploader = ({
         <div className="flex flex-col items-center justify-center gap-2 sm:gap-4 text-center">
           <div className="space-y-2">
             <div
-              className={clsx(
+              className={cn(
                 "rounded-full p-4 transition-colors sm:p-6 inline-flex",
                 isDragging ? "bg-blue-600" : "bg-gray-700",
               )}

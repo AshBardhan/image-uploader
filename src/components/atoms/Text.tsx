@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { cva } from "class-variance-authority";
-import { clsx } from "clsx";
+import { cn } from "@/utils/style";
 
 const textVariants = cva("transition-colors", {
   variants: {
@@ -14,9 +14,12 @@ const textVariants = cva("transition-colors", {
       p: "text-sm text-gray-700 md:text-base",
       div: "text-sm text-gray-700 md:text-base",
     },
-  },
-  defaultVariants: {
-    variant: "div",
+    theme: {
+      danger: "text-red-500",
+      success: "text-green-500",
+      white: "text-white",
+      default: "",
+    },
   },
 });
 
@@ -24,11 +27,13 @@ type TextVariant = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "div";
 
 interface TextProps extends HTMLAttributes<HTMLElement> {
   variant?: TextVariant;
+  theme?: "danger" | "success" | "white" | "default";
   children: ReactNode;
 }
 
 export function Text({
   variant = "div",
+  theme = "default",
   children,
   className,
   ...props
@@ -36,7 +41,7 @@ export function Text({
   const Tag = variant;
 
   return (
-    <Tag className={clsx(textVariants({ variant }), className)} {...props}>
+    <Tag className={cn(textVariants({ theme, variant }), className)} {...props}>
       {children}
     </Tag>
   );

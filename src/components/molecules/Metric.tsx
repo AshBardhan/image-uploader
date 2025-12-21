@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import { clsx } from "clsx";
+import { cn } from "@/utils/style";
 
 const metricContainerVariants = cva("flex", {
   variants: {
@@ -73,7 +73,7 @@ export function Metric({
   className,
 }: MetricProps) {
   return (
-    <div className={clsx(metricContainerVariants({ direction }), className)}>
+    <div className={cn(metricContainerVariants({ direction }), className)}>
       <div className={metricLabelVariants({ size, reverse })}>{label}</div>
       <div className={metricValueVariants({ theme, size, reverse })}>
         {value}

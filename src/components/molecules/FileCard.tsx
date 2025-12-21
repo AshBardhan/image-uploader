@@ -1,9 +1,11 @@
+import { cn } from "@/utils/style";
+import { useEffect, useState } from "react";
 import { Icon } from "@/components/atoms/Icon";
+import { Button } from "@/components/atoms/Button";
 import { Badge } from "@/components/atoms/Badge";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import type { File } from "@/types/file";
 import { FILE_STATUS_MAP } from "@/constants/file";
-import clsx from "clsx";
 
 interface FileCardProps extends File {
   className?: string;
@@ -17,10 +19,22 @@ export const FileCard = ({
   error,
   className,
 }: FileCardProps) => {
+  const [showStatusMessage, setShowStatusMessage] = useState(false);
+
+  useEffect(() => {
+    if (status === "completed" || status === "error") {
+      setShowStatusMessage(true);
+    }
+  }, [status]);
+
   return (
     <div
-      className={clsx(
-        "group relative overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 transition-all hover:border-gray-300 hover:shadow-lg",
+      className={cn(
+        "group relative overflow-hidden rounded-lg bg-gray-100 border-2 transition-all shadow-lg",
+        status !== "completed" && status !== "error" && "border-gray-200",
+        status === "uploading" && "border-blue-300",
+        status === "completed" && "border-green-300",
+        status === "error" && "border-red-300",
         className,
       )}
     >
@@ -63,23 +77,31 @@ export const FileCard = ({
       )}
 
       {/* Success Message - Absolute bottom-center */}
-      {status === "completed" && (
+      {status === "completed" && showStatusMessage && (
         <div
-          className="absolute bottom-0 left-0 right-0 bg-green-600/90 p-2 backdrop-blur-sm sm:p-3"
+          className="absolute bottom-0 left-0 right-0 bg-green-600/70 backdrop-blur-sm p-2 sm:p-3"
           role="status"
           aria-live="polite"
         >
           <div className="flex items-center justify-center gap-2 text-sm font-medium text-white">
             <Icon type="check" size="sm" />
             <span>Upload complete</span>
+            <Button
+              variant="ghost"
+              onClick={() => setShowStatusMessage(false)}
+              className="absolute right-1 top-1 h-auto px-1 py-1 text-white hover:bg-white/20 hover:text-white"
+              aria-label="Dismiss message"
+            >
+              <Icon type="cross" size="xs" />
+            </Button>
           </div>
         </div>
       )}
 
       {/* Error Message - Absolute bottom-center */}
-      {status === "error" && (
+      {status === "error" && showStatusMessage && (
         <div
-          className="absolute bottom-0 left-0 right-0 bg-red-600/90 p-2 backdrop-blur-sm sm:p-3"
+          className="absolute bottom-0 left-0 right-0 bg-red-600/70 backdrop-blur-sm p-2 sm:p-3"
           role="alert"
           aria-live="assertive"
         >
@@ -91,6 +113,14 @@ export const FileCard = ({
             <div className="text-xs text-white/90">
               {error || "Please retry again."}
             </div>
+            <Button
+              variant="ghost"
+              onClick={() => setShowStatusMessage(false)}
+              className="absolute right-1 top-1 h-auto px-1 py-1 text-white hover:bg-white/20 hover:text-white"
+              aria-label="Dismiss message"
+            >
+              <Icon type="cross" size="xs" />
+            </Button>
           </div>
         </div>
       )}

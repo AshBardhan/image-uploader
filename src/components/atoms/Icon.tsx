@@ -10,6 +10,7 @@ import {
   Folder,
   type LucideIcon,
 } from "lucide-react";
+import { cn } from "@/utils/style";
 
 export type IconType =
   | "upload"
@@ -25,11 +26,12 @@ export type IconType =
 interface IconProps {
   type: IconType;
   className?: string;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
   ariaLabel?: string;
 }
 
 const sizeMap = {
+  xs: 12,
   sm: 16,
   md: 24,
   lg: 32,
@@ -67,6 +69,10 @@ export const Icon = ({
   };
 
   return (
-    <IconComponent size={sizeMap[size]} className={className} {...a11yProps} />
+    <IconComponent
+      size={sizeMap[size]}
+      className={cn(className)}
+      {...a11yProps}
+    />
   );
 };

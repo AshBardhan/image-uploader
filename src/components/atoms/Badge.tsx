@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { clsx } from "clsx";
+import { cn } from "@/utils/style";
 
 const badgeVariants = cva(
   "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors",
@@ -36,10 +36,7 @@ export const Badge = ({
     "aria-label": ariaLabel,
   };
   return (
-    <span
-      className={clsx(badgeVariants({ variant, className }))}
-      {...a11yProps}
-    >
+    <span className={cn(badgeVariants({ variant }), className)} {...a11yProps}>
       {children}
     </span>
   );

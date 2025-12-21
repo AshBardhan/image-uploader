@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { clsx } from "clsx";
+import { cn } from "@/utils/style";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
 import type { FileType } from "@/types/file";
@@ -55,7 +55,7 @@ export const FileSelectorButton = ({
           onClick={handleClick}
           tabIndex={disabled ? -1 : 0}
           aria-label={`Select ${FILE_TYPE_MAP[type].label}${multiple ? "s" : ""}`}
-          className={clsx(
+          className={cn(
             "w-full rounded-lg border-2 p-4 transition-all sm:p-6",
             "border-gray-300 bg-gray-50",
             "flex flex-col items-center justify-center gap-2 sm:gap-4",

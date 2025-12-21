@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { clsx } from "clsx";
+import { cn } from "@/utils/style";
 
 const progressBarWrapperVariants = cva(
   "relative w-full overflow-hidden rounded-full bg-gray-300",
@@ -51,7 +51,7 @@ export const ProgressBar = ({
   const clampedProgress = Math.min(Math.max(progress, 0), 100);
 
   return (
-    <div className={clsx(progressBarWrapperVariants({ size }))}>
+    <div className={cn(progressBarWrapperVariants({ size }))}>
       <div
         className={progressBarVariants({ variant })}
         style={{ width: `${clampedProgress}%` }}
