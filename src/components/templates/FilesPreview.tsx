@@ -96,11 +96,13 @@ export const FilesPreview = ({
           </div>
 
           {/* Masonry grid of file cards */}
-          <div className="columns-1 gap-2 sm:columns-2 sm:gap-3 lg:columns-3 lg:gap-4">
+          <div className="columns-1 gap-x-2 sm:columns-2 sm:gap-x-3 lg:columns-3 lg:gap-x-4">
             {files.map((file) => (
-              <div key={file.id}>
-                <FileCard {...file} />
-              </div>
+              <FileCard
+                {...file}
+                key={file.id}
+                className="mb-2 sm:mb-3 lg:mb-4"
+              />
             ))}
           </div>
         </section>

@@ -1,4 +1,5 @@
 import { ProgressBar } from "@/components/atoms/ProgressBar";
+import { Metric } from "@/components/molecules/Metric";
 import { Icon } from "@/components/atoms/Icon";
 import { formatFileSize } from "@/utils/file";
 import { formatTime } from "@/utils/time";
@@ -17,7 +18,6 @@ export const FilesUploadProgress = ({
   const completedFiles = files.filter((f) => f.status === "completed").length;
   const failedFiles = files.filter((f) => f.status === "error").length;
   const uploadingFiles = files.filter((f) => f.status === "uploading").length;
-  const pendingFiles = files.filter((f) => f.status === "pending").length;
 
   const isUploading = uploadingFiles > 0;
   const hasErrors = failedFiles > 0;
@@ -56,21 +56,16 @@ export const FilesUploadProgress = ({
 
   const estimatedTimeRemaining = calculateETA();
 
-  if (uploadedBytes === 0 || pendingFiles > 0) {
+  if (uploadedBytes === 0) {
     return null;
   }
 
   return (
     <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
       <div className="space-y-3 sm:space-y-4">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <h3 className="text-base font-semibold text-gray-950 sm:text-lg">
-            Overall File Upload Progress
-          </h3>
-          <div className="text-xs font-medium text-gray-800 sm:text-sm">
-            {completedFiles} / {totalFiles} files
-          </div>
-        </div>
+        <h3 className="text-base font-semibold text-gray-950 sm:text-lg">
+          Overall File Upload Progress
+        </h3>
 
         {/* Progress Bar */}
         <div>
@@ -89,49 +84,43 @@ export const FilesUploadProgress = ({
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-3 pt-2 sm:gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {/* Uploaded Bytes */}
-          <div className="flex flex-col">
-            <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
-              Uploaded
-            </span>
-            <span className="text-sm font-semibold text-gray-950">
-              {formatFileSize(uploadedBytes)} / {formatFileSize(totalBytes)}
-            </span>
-          </div>
+          <Metric
+            label="Data"
+            direction="column"
+            size="small"
+            value={`${formatFileSize(uploadedBytes)}/${formatFileSize(totalBytes)}`}
+          />
 
-          {/* Uploading */}
-          <div className="flex flex-col">
-            <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
-              Uploading
-            </span>
-            <span className="text-sm font-semibold text-blue-700">
-              {uploadingFiles} file{uploadingFiles !== 1 ? "s" : ""}
-            </span>
-          </div>
-
-          {/* Estimated Time - Show only when > 0 */}
-          {estimatedTimeRemaining > 0 && (
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
-                Time Left
-              </span>
-              <span className="text-sm font-semibold text-gray-950">
-                {formatTime(estimatedTimeRemaining)}
-              </span>
-            </div>
-          )}
+          {/* Files Uploaded */}
+          <Metric
+            label="Uploaded"
+            direction="column"
+            size="small"
+            value={`${completedFiles}/${totalFiles}`}
+          />
 
           {/* Failed */}
           {failedFiles > 0 && (
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-700 uppercase tracking-wide font-semibold">
-                Failed
-              </span>
-              <span className="text-sm font-semibold text-red-700">
-                {failedFiles} file{failedFiles !== 1 ? "s" : ""}
-              </span>
-            </div>
+            <Metric
+              label="Failed"
+              direction="column"
+              size="small"
+              theme="danger"
+              value={`${failedFiles}/${totalFiles}`}
+            />
+          )}
+
+          {/* Estimated Time to Complete */}
+          {estimatedTimeRemaining > 0 && (
+            <Metric
+              className="ml-0 sm:ml-auto"
+              label="Time to Complete"
+              direction="column"
+              size="small"
+              value={formatTime(estimatedTimeRemaining)}
+            />
           )}
         </div>
 

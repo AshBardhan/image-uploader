@@ -3,10 +3,27 @@ import { Badge } from "@/components/atoms/Badge";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import type { File } from "@/types/file";
 import { FILE_STATUS_MAP } from "@/constants/file";
+import clsx from "clsx";
 
-export const FileCard = ({ name, preview, progress, status, error }: File) => {
+interface FileCardProps extends File {
+  className?: string;
+}
+
+export const FileCard = ({
+  name,
+  preview,
+  progress,
+  status,
+  error,
+  className,
+}: FileCardProps) => {
   return (
-    <div className="group relative mb-2 break-inside-avoid overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 transition-all hover:border-gray-300 hover:shadow-lg sm:mb-3 lg:mb-2">
+    <div
+      className={clsx(
+        "group relative overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 transition-all hover:border-gray-300 hover:shadow-lg",
+        className,
+      )}
+    >
       {/* Image taking entire cell space */}
       {preview ? (
         <img
