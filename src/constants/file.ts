@@ -18,11 +18,11 @@ export const FILE_STATUS_MAP: Record<FileStatus, FileStatusInfo> = {
     variant: "info",
   },
   completed: {
-    label: "Completed",
+    label: "Uploaded",
     color: "text-green-700",
     variant: "success",
   },
-  error: { label: "Error", color: "text-red-700", variant: "error" },
+  error: { label: "Failed", color: "text-red-700", variant: "error" },
 };
 
 interface FileTypeInfo {

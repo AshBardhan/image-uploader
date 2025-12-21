@@ -8,11 +8,11 @@ export interface File {
   preview?: string;
   progress: number;
   status: FileStatus;
-  uploadedBytes?: number;
+  bytesUploaded?: number;
   error?: string;
 }
 
-export interface FileUploadStats {
-  startTime: number;
-  totalBytesUploaded: number;
+export interface FileUploadTime {
+  start: number;
+  current: number;
 }

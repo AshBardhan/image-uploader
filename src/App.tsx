@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Uppy from "@uppy/core";
 import XHRUpload from "@uppy/xhr-upload";
 import ThumbnailGenerator from "@uppy/thumbnail-generator";
-import type { File, FileUploadStats } from "@/types/file";
+import type { File, FileUploadTime } from "@/types/file";
 import { Header } from "@/components/templates/Header";
 import { FileUploader } from "@/components/templates/FileUploader";
 import { FilesUploadProgress } from "@/components/templates/FilesUploadProgress";
@@ -10,9 +10,9 @@ import { FilesPreview } from "@/components/templates/FilesPreview";
 
 function App() {
   const [files, setFiles] = useState<File[]>([]);
-  const [uploadStats, setUploadStats] = useState<FileUploadStats>({
-    startTime: 0,
-    totalBytesUploaded: 0,
+  const [uploadTime, setUploadTime] = useState<FileUploadTime>({
+    start: 0,
+    current: 0,
   });
   const uppyRef = useRef<Uppy | null>(null);
 
@@ -79,11 +79,13 @@ function App() {
                   ...f,
                   progress: Math.round(percentage),
                   status: "uploading",
-                  uploadedBytes: progress.bytesUploaded,
+                  bytesUploaded: progress.bytesUploaded,
                 }
               : f,
           ),
         );
+
+        setUploadTime((prev) => ({ ...prev, current: Date.now() }));
       }
     });
 
@@ -136,9 +138,10 @@ function App() {
 
   const handleUploadAll = () => {
     if (uppyRef.current) {
-      setUploadStats({
-        startTime: Date.now(),
-        totalBytesUploaded: 0,
+      const initialTime = Date.now();
+      setUploadTime({
+        start: initialTime,
+        current: initialTime,
       });
       uppyRef.current.upload();
     }
@@ -148,6 +151,10 @@ function App() {
     if (uppyRef.current) {
       uppyRef.current.cancelAll();
       setFiles([]);
+      setUploadTime({
+        start: 0,
+        current: 0,
+      });
     }
   };
 
@@ -194,7 +201,7 @@ function App() {
         />
 
         {/* Files Upload Overall Progress */}
-        <FilesUploadProgress files={files} uploadStats={uploadStats} />
+        <FilesUploadProgress files={files} time={uploadTime} />
 
         {/* Files List Preview */}
         <FilesPreview

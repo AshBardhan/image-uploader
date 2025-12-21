@@ -4,60 +4,62 @@ import { Metric } from "@/components/molecules/Metric";
 import { Icon } from "@/components/atoms/Icon";
 import { formatFileSize } from "@/utils/file";
 import { formatTime } from "@/utils/time";
-import type { File, FileUploadStats } from "@/types/file";
+import type { File, FileUploadTime } from "@/types/file";
 
 export interface FilesUploadProgressProps {
   files: File[];
-  uploadStats: FileUploadStats;
+  time: FileUploadTime;
 }
 
 export const FilesUploadProgress = ({
   files,
-  uploadStats,
+  time,
 }: FilesUploadProgressProps) => {
+  const { start, current } = time;
   const totalFiles = files.length;
   const completedFiles = files.filter((f) => f.status === "completed").length;
+  const pendingFiles = files.filter((f) => f.status === "pending").length;
   const failedFiles = files.filter((f) => f.status === "error").length;
   const uploadingFiles = files.filter((f) => f.status === "uploading").length;
 
   const isUploading = uploadingFiles > 0;
   const hasErrors = failedFiles > 0;
 
-  const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
-  const uploadedBytes = files.reduce((sum, file) => {
-    if (file.status === "completed") {
-      return sum + file.size;
-    } else if (file.status === "uploading" && file.uploadedBytes) {
-      return sum + file.uploadedBytes;
-    }
-    return sum;
-  }, 0);
+  const bytesTotal = files.reduce((sum, file) => sum + file.size, 0);
+  const bytesUploaded = files.reduce(
+    (sum, file) => sum + (file.bytesUploaded || 0),
+    0,
+  );
+
   const uploadProgress =
-    totalBytes > 0 ? Math.round((uploadedBytes / totalBytes) * 100) : 0;
+    bytesTotal > 0 ? Math.round((bytesUploaded / bytesTotal) * 100) : 0;
 
   const calculateETA = (): number => {
-    // Return 0 if not uploading or has errors (upload stopped)
-    if (uploadingFiles === 0 || uploadStats.startTime === 0 || hasErrors) {
+    if (bytesUploaded === 0 || start === 0 || start === current) {
       return 0;
     }
 
-    const elapsedTime = (Date.now() - uploadStats.startTime) / 1000; // in seconds
-    const remainingBytes = totalBytes - uploadedBytes;
-
-    // Return 0 if can't calculate yet
-    if (uploadedBytes === 0 || elapsedTime === 0) {
+    if (uploadProgress === 100 || (hasErrors && !isUploading)) {
       return 0;
     }
 
-    const uploadSpeed = uploadedBytes / elapsedTime; // bytes per second
-    const estimatedTimeRemaining = remainingBytes / uploadSpeed;
+    const duration = (current - start) / 1000;
+    const bytesLeft = bytesTotal - bytesUploaded;
+    const uploadSpeed = bytesUploaded / duration;
 
-    return estimatedTimeRemaining;
+    return bytesLeft / uploadSpeed;
   };
 
-  const estimatedTimeRemaining = calculateETA();
+  const timeLeft = calculateETA();
 
-  if (uploadedBytes === 0) {
+  // Hide if no active upload states (only pending or no files)
+  if (uploadingFiles === 0 && completedFiles === 0 && failedFiles === 0) {
+    return null;
+  }
+
+  // Hide if there are pending files alongside completed/failed files
+  // (user added new files after previous upload finished)
+  if (pendingFiles > 0 && (completedFiles > 0 || failedFiles > 0)) {
     return null;
   }
 
@@ -89,7 +91,7 @@ export const FilesUploadProgress = ({
             label="Data"
             direction="column"
             size="small"
-            value={`${formatFileSize(uploadedBytes)}/${formatFileSize(totalBytes)}`}
+            value={`${formatFileSize(bytesUploaded)}/${formatFileSize(bytesTotal)}`}
           />
 
           {/* Files Uploaded */}
@@ -100,25 +102,14 @@ export const FilesUploadProgress = ({
             value={`${completedFiles}/${totalFiles}`}
           />
 
-          {/* Failed */}
-          {failedFiles > 0 && (
-            <Metric
-              label="Failed"
-              direction="column"
-              size="small"
-              theme="danger"
-              value={`${failedFiles}/${totalFiles}`}
-            />
-          )}
-
           {/* Estimated Time to Complete */}
-          {estimatedTimeRemaining > 0 && (
+          {timeLeft > 0 && (
             <Metric
               className="ml-0 sm:ml-auto"
-              label="Time to Complete"
+              label="Time Left"
               direction="column"
               size="small"
-              value={formatTime(estimatedTimeRemaining)}
+              value={`approx. ${formatTime(timeLeft)}`}
             />
           )}
         </div>
@@ -138,7 +129,7 @@ export const FilesUploadProgress = ({
           </div>
         )}
 
-        {!isUploading && completedFiles === totalFiles && totalFiles > 0 && (
+        {!isUploading && completedFiles === totalFiles && (
           <div
             className="flex items-center gap-2 text-xs font-medium text-green-800 sm:text-sm"
             role="status"
@@ -157,7 +148,7 @@ export const FilesUploadProgress = ({
           >
             <Icon type="error" size="sm" />
             <span>
-              {failedFiles} file{failedFiles !== 1 ? "s" : ""} failed to upload
+              {failedFiles} file{failedFiles > 1 ? "s" : ""} failed to upload
             </span>
           </div>
         )}
