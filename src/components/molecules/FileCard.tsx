@@ -6,6 +6,7 @@ import { Badge } from "@/components/atoms/Badge";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import type { File } from "@/types/file";
 import { FILE_STATUS_MAP } from "@/constants/file";
+import { SkeletonBar } from "../atoms/SkeletonBar";
 
 interface FileCardProps extends File {
   className?: string;
@@ -20,12 +21,21 @@ export const FileCard = ({
   className,
 }: FileCardProps) => {
   const [showStatusMessage, setShowStatusMessage] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const isFileLoading =
+    !preview && (status === "pending" || status === "uploading");
 
   useEffect(() => {
     if (status === "completed" || status === "error") {
       setShowStatusMessage(true);
     }
   }, [status]);
+
+  useEffect(() => {
+    if (preview) {
+      setImageLoaded(false);
+    }
+  }, [preview]);
 
   return (
     <div
@@ -39,15 +49,45 @@ export const FileCard = ({
       )}
     >
       {/* Image taking entire cell space */}
-      {preview ? (
-        <img
-          src={preview}
-          alt={`Preview of ${name}`}
-          className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+      {isFileLoading ? (
+        // Loading skeleton
+        <div className="animate-pulse relative aspect-square md:aspect-video">
+          <SkeletonBar className="absolute inset-0" />
+          <Icon
+            type="image"
+            className="text-gray-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            size="lg"
+          />
+        </div>
+      ) : preview ? (
+        // Image preview
+        <div className="relative aspect-square md:aspect-video">
+          <div
+            className={cn(
+              "absolute z-10 inset-0 bg-gray-100",
+              imageLoaded && "opacity-0",
+            )}
+          >
+            <Icon
+              type="image"
+              className="text-gray-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              size="lg"
+            />
+          </div>
+          <img
+            src={preview}
+            alt={`Preview of ${name}`}
+            className={cn(
+              "w-full object-cover transition-transform duration-300 group-hover:scale-105",
+              !imageLoaded && "opacity-0",
+            )}
+            onLoad={() => setImageLoaded(true)}
+          />
+        </div>
       ) : (
+        // Fallback when no preview
         <div
-          className="flex aspect-square w-full items-center justify-center"
+          className="flex aspect-square items-center justify-center bg-gray-200 md:aspect-video"
           aria-label="No preview available"
         >
           <Icon type="image" className="text-gray-400" size="lg" />
@@ -55,14 +95,16 @@ export const FileCard = ({
       )}
 
       {/* Status Badge - Absolute top-right */}
-      <div className="absolute right-1 top-1 sm:right-2 sm:top-2">
-        <Badge
-          variant={FILE_STATUS_MAP[status].variant}
-          ariaLabel={`Status: ${FILE_STATUS_MAP[status].label}`}
-        >
-          {FILE_STATUS_MAP[status].label}
-        </Badge>
-      </div>
+      {!isFileLoading && (
+        <div className="absolute right-1 top-1 sm:right-2 sm:top-2">
+          <Badge
+            variant={FILE_STATUS_MAP[status].variant}
+            ariaLabel={`Status: ${FILE_STATUS_MAP[status].label}`}
+          >
+            {FILE_STATUS_MAP[status].label}
+          </Badge>
+        </div>
+      )}
 
       {/* Progress Bar - Absolute bottom-center (only when uploading) */}
       {status === "uploading" && (

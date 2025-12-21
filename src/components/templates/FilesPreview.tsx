@@ -73,7 +73,7 @@ export const FilesPreview = ({
                 onClick={onCancelAll}
                 variant="outline"
                 size="sm"
-                disabled={pending > 0 || uploading > 0}
+                disabled={uploading > 0}
               >
                 Cancel
               </Button>
