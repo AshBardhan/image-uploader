@@ -32,7 +32,11 @@ interface FileTypeInfo {
 }
 
 export const FILE_TYPE_MAP: Record<FileType, FileTypeInfo> = {
-  image: { label: "image", format: "JPG, PNG, GIF", accept: "image/*" },
+  image: {
+    label: "image",
+    format: "JPG, JPEG, PNG, GIF, WEBP",
+    accept: ".jpg,.jpeg,.png,.gif,.webp",
+  },
   video: { label: "video", format: "MP4, AVI, MOV", accept: "video/*" },
   document: {
     label: "document",

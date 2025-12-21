@@ -16,3 +16,12 @@ export interface FileUploadTime {
   start: number;
   current: number;
 }
+
+export interface UppyUploaderConfig {
+  maxFileSize?: number;
+  allowedFileTypes?: string[];
+  endpoint?: string;
+  uploadPreset?: string;
+  thumbnailWidth?: number;
+  thumbnailHeight?: number;
+}
