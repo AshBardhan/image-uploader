@@ -1,8 +1,10 @@
+import { ErrorBoundary } from "react-error-boundary";
+import { useUppyUploader } from "@/hooks/useUppyUploader";
 import { Header } from "@/components/organisms/Header";
 import { FileUploader } from "@/components/templates/FileUploader";
 import { FilesUploadStats } from "@/components/templates/FilesUploadStats";
 import { FilesPreview } from "@/components/templates/FilesPreview";
-import { useUppyUploader } from "@/hooks/useUppyUploader";
+import { FilesErrorFallback } from "@/components/templates/FilesErrorFallback";
 
 function App() {
   const { files, time, actions } = useUppyUploader();
@@ -16,25 +18,27 @@ function App() {
           description="Upload your images to Cloudinary server"
         />
 
-        {/* File Uploader */}
-        <FileUploader
-          type="image"
-          multiple
-          onFilesSelected={actions.addFiles}
-        />
+        <ErrorBoundary fallback={<FilesErrorFallback />}>
+          {/* File Uploader */}
+          <FileUploader
+            type="image"
+            multiple
+            onFilesSelected={actions.addFiles}
+          />
 
-        {/* Files Upload Overall Progress */}
-        <FilesUploadStats files={files} time={time} />
+          {/* Files Upload Overall Progress */}
+          <FilesUploadStats files={files} time={time} />
 
-        {/* Files List Preview */}
-        <FilesPreview
-          files={files}
-          type="image"
-          onUploadAll={actions.uploadAll}
-          onCancelAll={actions.cancelAll}
-          onRetryFailed={actions.retryFailed}
-          onClearCompleted={actions.clearCompleted}
-        />
+          {/* Files List Preview */}
+          <FilesPreview
+            files={files}
+            type="image"
+            onUploadAll={actions.uploadAll}
+            onCancelAll={actions.cancelAll}
+            onRetryFailed={actions.retryFailed}
+            onClearCompleted={actions.clearCompleted}
+          />
+        </ErrorBoundary>
       </div>
     </div>
   );
