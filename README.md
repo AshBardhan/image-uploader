@@ -1,73 +1,101 @@
-# React + TypeScript + Vite
+# Image Uploader
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## About the Project
 
-Currently, two official plugins are available:
+A modern, performant image uploader built with React, Uppy, and Cloudinary. It supports drag-and-drop, file validation, thumbnail previews, concurrent uploads, and a beautiful, responsive UI with toast notifications.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[View Demo](http://uppy-img-uploader.netlify.app)
 
-## React Compiler
+## Features Implemented
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Drag-and-drop and file picker support
+- File type and size validation (JPEG, PNG, GIF, WEBP, max 10MB)
+- Async thumbnail generation with loading skeletons
+- Upload progress tracking and stats
+- Error handling with toast notifications
+- Retry, cancel, and clear actions for uploads
+- Responsive, accessible UI
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 18
+- TypeScript
+- Uppy (Core, XHRUpload, ThumbnailGenerator)
+- Cloudinary (image hosting)
+- Tailwind CSS
+- class-variance-authority (CVA)
+- framer-motion
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Setup & Installation
+
+```sh
+# Clone the repository
+git clone https://github.com/AshBardhan/image-uploader.git
+cd image-uploader
+
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open `http://localhost:5173` in your browser to view the application.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Project Structure
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+image-uploader/
+├── public/
+├── src/
+│   ├── components/
+│   │   ├── atoms/
+│   │   ├── molecules/
+│   │   ├── templates/
+│   ├── constants/
+│   ├── contexts/
+│   ├── hooks/
+│   ├── types/
+│   ├── utils/
+│   ├── App.tsx
+│   ├── main.tsx
+├── package.json
+├── tailwind.config.js
+├── vite.config.ts
 ```
+
+## Architectural Decisions
+
+| Decision                        | Reasoning                                                                |
+|---------------------------------|--------------------------------------------------------------------------|
+| Uppy for uploads                | Robust, extensible, handles restrictions and plugins well                |
+| Cloudinary for storage          | Fast, reliable, free tier, easy integration                              |
+| Context API for toasts          | Global notification management, decoupled from UI                        |
+| ThumbnailGenerator plugin       | Efficient async thumbnail creation                                       |
+| File state derived from Uppy    | Single source of truth, avoids sync bugs                                 |
+| Tailwind CSS + CVA              | Utility-first, scalable, easy variant management                         |
+| Atomic design pattern           | Reusable, testable, maintainable UI components                           |
+
+## Future Implementations
+
+- [ ] Add React error boundaries for crash protection
+- [ ] Lazy load thumbnails for large file lists
+- [ ] Make upload concurrency configurable
+- [ ] Revoke object URLs for thumbnails on file removal
+- [ ] Add unit and integration tests
+- [ ] Add dark mode support
+- [ ] Add drag-to-reorder for files
+- [ ] Add multi-language (i18n) support
