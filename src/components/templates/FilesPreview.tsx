@@ -1,9 +1,10 @@
 import type { File, FileType } from "@/types/file";
 import { Text } from "@/components/atoms/Text";
-import { FileCard } from "@/components/molecules/FileCard";
+import { FileItem } from "@/components/templates/FileItem";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
 import { FILE_TYPE_MAP } from "@/constants/file";
+import { Card } from "../molecules/Card";
 
 export interface FilesPreviewProps {
   files: File[];
@@ -81,7 +82,7 @@ export const FilesPreview = ({
         {total > 0 ? (
           <div className="columns-1 gap-x-2 sm:columns-2 sm:gap-x-3 lg:columns-3 lg:gap-x-4">
             {files.map((file) => (
-              <FileCard
+              <FileItem
                 {...file}
                 key={file.id}
                 className="mb-2 sm:mb-3 lg:mb-4"
@@ -89,11 +90,11 @@ export const FilesPreview = ({
             ))}
           </div>
         ) : (
-          <div className="rounded-lg border border-gray-400 bg-gray-50 p-12 text-center">
-            <Text variant="p">
+          <Card>
+            <Text variant="p" className="text-center py-5">
               No {type === "all" ? "files" : type + "s"} available for upload.
             </Text>
-          </div>
+          </Card>
         )}
       </section>
     </>

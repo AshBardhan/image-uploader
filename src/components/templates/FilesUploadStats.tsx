@@ -1,4 +1,5 @@
 import { Text } from "@/components/atoms/Text";
+import { Card } from "@/components/molecules/Card";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import { Metric } from "@/components/molecules/Metric";
 import { Icon } from "@/components/atoms/Icon";
@@ -61,11 +62,25 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
     }
   }
 
+  const getFileCardTheme = () => {
+    return isUploading
+      ? "default"
+      : hasFailed
+        ? "error"
+        : isUploadComplete
+          ? "success"
+          : "default";
+  };
+
   return (
-    <section className="rounded-lg border border-gray-300 bg-gray-50 p-4 shadow-sm sm:p-6">
+    <Card theme={getFileCardTheme()}>
       {(isUploading || totalFiles > completedFiles + failedFiles) && (
-        <div className="space-y-3 sm:space-y-4">
-          <Text variant="h4" role="status" aria-live="polite">
+        <div
+          className="space-y-3 sm:space-y-4"
+          role="status"
+          aria-live="polite"
+        >
+          <Text variant="h4">
             {hasFailed ? "Re-uploading" : "Uploading"} Files
           </Text>
           {/* Progress Bar */}
@@ -82,7 +97,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
             showPercentage={true}
           />
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
             {/* Uploaded Bytes */}
             <Metric
               label="Data"
@@ -115,10 +130,14 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
 
       {/* Status Message */}
       {!isUploading && isUploadComplete && (
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div
+          className="flex items-center gap-2 sm:gap-4"
+          role="status"
+          aria-live="polite"
+        >
           <Icon type="check" size="xl" className="text-green-500" />
           <div>
-            <Text variant="h4" theme="success" role="status" aria-live="polite">
+            <Text variant="h4" theme="success">
               All files uploaded successfully
             </Text>
             <Text className="text-xs">Please clear the completed files</Text>
@@ -127,15 +146,14 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
       )}
 
       {hasFailed && !isUploading && (
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div
+          className="flex items-center gap-2 sm:gap-4"
+          role="alert"
+          aria-live="assertive"
+        >
           <Icon type="error" size="xl" className="text-red-500" />
           <div>
-            <Text
-              variant="h4"
-              theme="danger"
-              role="alert"
-              aria-live="assertive"
-            >
+            <Text variant="h4" theme="danger">
               Unable to upload files
             </Text>
 
@@ -145,6 +163,6 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
           </div>
         </div>
       )}
-    </section>
+    </Card>
   );
 };

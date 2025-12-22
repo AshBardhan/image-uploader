@@ -5,21 +5,22 @@ import { Button } from "@/components/atoms/Button";
 import { SkeletonBar } from "@/components/atoms/SkeletonBar";
 import { Badge } from "@/components/atoms/Badge";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
+import { Card } from "@/components/molecules/Card";
 import type { File } from "@/types/file";
 import { FILE_STATUS_MAP } from "@/constants/file";
 
-interface FileCardProps extends File {
+interface FileItemProps extends File {
   className?: string;
 }
 
-export const FileCard = ({
+export const FileItem = ({
   name,
   preview,
   progress,
   status,
   error,
   className,
-}: FileCardProps) => {
+}: FileItemProps) => {
   const [showStatusMessage, setShowStatusMessage] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const isFileLoading =
@@ -43,13 +44,14 @@ export const FileCard = ({
   };
 
   return (
-    <div
+    <Card
+      padded={false}
       className={cn(
-        "group relative overflow-hidden rounded-lg bg-gray-100 border-2 transition-colors shadow-xl",
-        status !== "completed" && status !== "error" && "border-gray-200",
-        status === "uploading" && "border-blue-300",
-        status === "completed" && "border-green-300",
-        status === "error" && "border-red-300",
+        "group relative overflow-hidden bg-gray-100 border-2 transition-colors",
+        status !== "completed" && status !== "error" && "border-gray-300",
+        status === "uploading" && "border-blue-400",
+        status === "completed" && "border-green-400",
+        status === "error" && "border-red-400",
         className,
       )}
     >
@@ -70,7 +72,7 @@ export const FileCard = ({
           <div
             className={cn(
               "absolute z-10 inset-0 bg-gray-100",
-              imageLoaded && "opacity-0",
+              imageLoaded && "opacity-0 invisible",
             )}
           >
             <Icon
@@ -85,7 +87,7 @@ export const FileCard = ({
             className={cn(
               "w-full object-cover transition-transform duration-300",
               "group-hover:scale-105",
-              !imageLoaded && "opacity-0",
+              !imageLoaded && "opacity-0 invisible",
             )}
             onLoad={() => setImageLoaded(true)}
           />
@@ -179,6 +181,6 @@ export const FileCard = ({
           {name}
         </div>
       </div>
-    </div>
+    </Card>
   );
 };

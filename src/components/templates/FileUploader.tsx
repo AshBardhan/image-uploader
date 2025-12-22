@@ -2,6 +2,7 @@ import { useState } from "react";
 import { cn } from "@/utils/style";
 import { Icon } from "@/components/atoms/Icon";
 import { FileSelectorButton } from "@/components/molecules/FileSelectorButton";
+import { Card } from "@/components/molecules/Card";
 import type { FileType } from "@/types/file";
 import { FILE_TYPE_MAP } from "@/constants/file";
 
@@ -67,7 +68,7 @@ export const FileUploader = ({
   // Desktop Mode: Full drop zone with drag & drop
   if (!isMobile) {
     return (
-      <div
+      <Card
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -78,7 +79,7 @@ export const FileUploader = ({
           "relative rounded-lg border-2 border-dashed p-4 transition-colors sm:p-6 md:p-8",
           isDragging
             ? "border-blue-600 bg-blue-100"
-            : "border-gray-300 bg-gray-100",
+            : "border-gray-400 bg-gray-100",
           disabled && "cursor-not-allowed opacity-50",
           !disabled &&
             " hover:bg-blue-50 focus-visible:outline-none focus-visible:border-blue-600",
@@ -129,12 +130,12 @@ export const FileUploader = ({
             aria-hidden="true"
           />
         )}
-      </div>
+      </Card>
     );
   } else {
     // Mobile Mode: Large vertical button with icon and text
     return (
-      <div className="w-full">
+      <Card padded={false} className="border-none">
         <FileSelectorButton
           onFilesSelected={onFilesSelected}
           type={type}
@@ -142,7 +143,7 @@ export const FileUploader = ({
           disabled={disabled}
           isMobile={true}
         />
-      </div>
+      </Card>
     );
   }
 };
