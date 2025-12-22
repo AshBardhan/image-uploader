@@ -62,7 +62,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
   }
 
   return (
-    <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+    <section className="rounded-lg border border-gray-300 bg-gray-50 p-4 shadow-sm sm:p-6">
       {(isUploading || totalFiles > completedFiles + failedFiles) && (
         <div className="space-y-3 sm:space-y-4">
           <Text variant="h4" role="status" aria-live="polite">

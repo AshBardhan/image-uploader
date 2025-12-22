@@ -1,4 +1,4 @@
-import { Header } from "@/components/templates/Header";
+import { Header } from "@/components/organisms/Header";
 import { FileUploader } from "@/components/templates/FileUploader";
 import { FilesUploadStats } from "@/components/templates/FilesUploadStats";
 import { FilesPreview } from "@/components/templates/FilesPreview";

@@ -97,23 +97,10 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
       sync();
     };
 
-    const onRestrictionFailed = (_file: any, error: any) => {
-      const message = error?.isRestriction
-        ? error.message
-        : "File cannot be uploaded.";
-
-      showToast({
-        theme: "warning",
-        title: "Upload restriction",
-        message,
-      });
-    };
-
     uppy.on("file-added", onFileAdded);
     uppy.on("file-removed", sync);
     uppy.on("upload-progress", sync);
     uppy.on("thumbnail:generated", sync);
-    uppy.on("restriction-failed", onRestrictionFailed);
     uppy.on("upload-error", onUploadError);
     uppy.on("upload-success", sync);
 
@@ -124,21 +111,38 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     };
   }, [finalConfig, showToast]);
 
-  const addFiles = useCallback((fileList: FileList) => {
-    Array.from(fileList).forEach((file) => {
-      uppyRef.current?.addFile({
-        name: file.name,
-        type: file.type,
-        data: file,
+  const addFiles = useCallback(
+    (fileList: FileList) => {
+      Array.from(fileList).forEach((file) => {
+        try {
+          uppyRef.current?.addFile({
+            name: file.name,
+            type: file.type,
+            data: file,
+          });
+        } catch (error: any) {
+          showToast({
+            theme: "warning",
+            title: "Upload restriction",
+            message:
+              error?.message || "File cannot be uploaded due to restrictions.",
+          });
+        }
       });
-    });
-  }, []);
+    },
+    [showToast],
+  );
 
   const uploadAll = useCallback(() => {
     const now = Date.now();
     setTime({ start: now, current: now });
+    showToast({
+      title: "Uploading Started",
+      message: "Your files are being uploaded.",
+      duration: 5000,
+    });
     uppyRef.current?.upload();
-  }, []);
+  }, [showToast]);
 
   const cancelAll = useCallback(() => {
     uppyRef.current?.cancelAll();
@@ -150,13 +154,24 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     files
       .filter((f) => f.status === "error")
       .forEach((f) => uppyRef.current?.retryUpload(f.id));
-  }, [files]);
+    showToast({
+      title: "Retrying Failed Uploads",
+      message: "Attempting to re-upload all failed files.",
+      duration: 5000,
+    });
+  }, [files, showToast]);
 
   const clearCompleted = useCallback(() => {
     files
       .filter((f) => f.status === "completed")
       .forEach((f) => uppyRef.current?.removeFile(f.id));
-  }, [files]);
+    showToast({
+      theme: "success",
+      title: "Cleared Completed Files",
+      message: "All completed files have been removed from the list.",
+      duration: 5000,
+    });
+  }, [files, showToast]);
 
   return {
     files,

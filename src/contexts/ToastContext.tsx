@@ -88,7 +88,7 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
       {createPortal(
         <>
           {topToasts.length > 0 && (
-            <div className="fixed left-1/2 top-4 z-50 flex -translate-x-1/2 flex-col gap-2">
+            <div className="fixed left-1/2 top-4 z-50 flex -translate-x-1/2 flex-col gap-2 px-4 w-full max-w-xl">
               {topToasts.map((toast) => (
                 <Toast
                   key={toast.id}

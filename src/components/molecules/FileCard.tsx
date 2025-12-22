@@ -2,11 +2,11 @@ import { cn } from "@/utils/style";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/atoms/Icon";
 import { Button } from "@/components/atoms/Button";
+import { SkeletonBar } from "@/components/atoms/SkeletonBar";
 import { Badge } from "@/components/atoms/Badge";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import type { File } from "@/types/file";
 import { FILE_STATUS_MAP } from "@/constants/file";
-import { SkeletonBar } from "../atoms/SkeletonBar";
 
 interface FileCardProps extends File {
   className?: string;
@@ -37,10 +37,15 @@ export const FileCard = ({
     }
   }, [preview]);
 
+  const closeMessage = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    setShowStatusMessage(false);
+  };
+
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-lg bg-gray-100 border-2 transition-all shadow-lg",
+        "group relative overflow-hidden rounded-lg bg-gray-100 border-2 transition-colors shadow-xl",
         status !== "completed" && status !== "error" && "border-gray-200",
         status === "uploading" && "border-blue-300",
         status === "completed" && "border-green-300",
@@ -78,7 +83,8 @@ export const FileCard = ({
             src={preview}
             alt={`Preview of ${name}`}
             className={cn(
-              "w-full object-cover transition-transform duration-300 group-hover:scale-105",
+              "w-full object-cover transition-transform duration-300",
+              "group-hover:scale-105",
               !imageLoaded && "opacity-0",
             )}
             onLoad={() => setImageLoaded(true)}
@@ -130,7 +136,7 @@ export const FileCard = ({
             <span>Upload complete</span>
             <Button
               variant="ghost"
-              onClick={() => setShowStatusMessage(false)}
+              onClick={closeMessage}
               className="absolute right-1 top-1 h-auto px-1 py-1 text-white hover:bg-white/20 hover:text-white"
               aria-label="Dismiss message"
             >
@@ -157,7 +163,7 @@ export const FileCard = ({
             </div>
             <Button
               variant="ghost"
-              onClick={() => setShowStatusMessage(false)}
+              onClick={closeMessage}
               className="absolute right-1 top-1 h-auto px-1 py-1 text-white hover:bg-white/20 hover:text-white"
               aria-label="Dismiss message"
             >

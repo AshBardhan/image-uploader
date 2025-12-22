@@ -11,7 +11,7 @@ export type ToastPosition = "top" | "bottom";
 type ToastState = "entering" | "visible" | "exitingTop" | "exitingBottom";
 
 const toastVariants = cva(
-  "relative flex items-start gap-3 border-2 rounded-lg shadow-lg transition-all duration-300 ease-in-out min-w-[320px] max-w-[500px] p-4",
+  "relative flex items-start gap-3 border-2 rounded-lg shadow-lg transition-all duration-300 ease-in-out p-4",
   {
     variants: {
       theme: {

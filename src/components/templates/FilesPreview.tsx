@@ -30,57 +30,55 @@ export const FilesPreview = ({
 
   return (
     <>
-      {total > 0 ? (
-        <section className="flex flex-col gap-4 sm:gap-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <Text variant="h3" className="capitalize">
-              {FILE_TYPE_MAP[type].label}
-              {total ? "s" : ""} ({total})
-            </Text>
-            <div className="flex flex-wrap gap-2 sm:gap-3">
-              <Button
-                onClick={onUploadAll}
-                disabled={pending === 0 || uploading > 0}
-                variant="primary"
-                size="sm"
-              >
-                <Icon type="upload" size="sm" />
-                Upload
+      <section className="flex flex-col gap-4 sm:gap-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Text variant="h3" className="capitalize">
+            {FILE_TYPE_MAP[type].label}s {total > 0 && `(${total})`}
+          </Text>
+          <div className="flex flex-wrap gap-2 sm:gap-3">
+            <Button
+              onClick={onUploadAll}
+              disabled={pending === 0 || uploading > 0}
+              loading={uploading > 0}
+              variant="primary"
+              size="sm"
+            >
+              {uploading === 0 && <Icon type="upload" size="sm" />}
+              Upload
+            </Button>
+
+            {failed > 0 && (
+              <Button onClick={onRetryFailed} variant="danger" size="sm">
+                <Icon type="retry" size="sm" />
+                <span className="hidden sm:inline">
+                  Retry Failed {failed !== total ? ` (${failed})` : ""}
+                </span>
+                <span className="sm:hidden">Retry ({failed})</span>
               </Button>
+            )}
 
-              {failed > 0 && (
-                <Button onClick={onRetryFailed} variant="danger" size="sm">
-                  <Icon type="retry" size="sm" />
-                  <span className="hidden sm:inline">
-                    Retry Failed {failed !== total ? ` (${failed})` : ""}
-                  </span>
-                  <span className="sm:hidden">Retry ({failed})</span>
-                </Button>
-              )}
-
-              {completed > 0 && (
-                <Button onClick={onClearCompleted} variant="outline" size="sm">
-                  <Icon type="trash" size="sm" />
-                  <span className="hidden sm:inline">
-                    Clear Completed
-                    {completed !== total ? ` (${completed})` : ""}
-                  </span>
-                  <span className="sm:hidden">Clear ({completed})</span>
-                </Button>
-              )}
-
-              <Button
-                onClick={onCancelAll}
-                variant="outline"
-                size="sm"
-                disabled={uploading > 0}
-              >
-                Cancel
+            {completed > 0 && (
+              <Button onClick={onClearCompleted} variant="secondary" size="sm">
+                <Icon type="trash" size="sm" />
+                <span className="hidden sm:inline">
+                  Clear Completed
+                  {completed !== total ? ` (${completed})` : ""}
+                </span>
+                <span className="sm:hidden">Clear ({completed})</span>
               </Button>
-            </div>
+            )}
+
+            <Button
+              onClick={onCancelAll}
+              variant="outline"
+              size="sm"
+              disabled={total === 0 || uploading > 0}
+            >
+              Cancel
+            </Button>
           </div>
-
-          {/* Masonry grid of file cards */}
+        </div>
+        {total > 0 ? (
           <div className="columns-1 gap-x-2 sm:columns-2 sm:gap-x-3 lg:columns-3 lg:gap-x-4">
             {files.map((file) => (
               <FileCard
@@ -90,14 +88,14 @@ export const FilesPreview = ({
               />
             ))}
           </div>
-        </section>
-      ) : (
-        <div className="rounded-lg border-2 border-gray-400 bg-gray-50 p-12 text-center">
-          <Text variant="p">
-            No {type === "all" ? "files" : type + "s"} available for upload.
-          </Text>
-        </div>
-      )}
+        ) : (
+          <div className="rounded-lg border border-gray-400 bg-gray-50 p-12 text-center">
+            <Text variant="p">
+              No {type === "all" ? "files" : type + "s"} available for upload.
+            </Text>
+          </div>
+        )}
+      </section>
     </>
   );
 };

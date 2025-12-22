@@ -56,15 +56,16 @@ export const FileSelectorButton = ({
           tabIndex={disabled ? -1 : 0}
           aria-label={`Select ${FILE_TYPE_MAP[type].label}${multiple ? "s" : ""}`}
           className={cn(
-            "w-full rounded-lg border-2 p-4 transition-all sm:p-6",
-            "border-gray-300 bg-gray-50",
+            "w-full rounded-lg border-2 p-4 transition-colors sm:p-6",
+            "border-gray-300 bg-gray-100",
             "flex flex-col items-center justify-center gap-2 sm:gap-4",
             disabled && "cursor-not-allowed opacity-50",
-            !disabled && "hover:border-primary-400 hover:bg-primary-100",
+            !disabled &&
+              "hover:bg-blue-50 focus-visible:outline-none focus-visible:border-blue-600",
           )}
         >
           {/* Icon */}
-          <div className="rounded-full bg-gray-600 p-4 sm:p-6">
+          <div className="rounded-full bg-gray-700 p-4 sm:p-6">
             <Icon type="upload" size="lg" className="text-white" />
           </div>
 

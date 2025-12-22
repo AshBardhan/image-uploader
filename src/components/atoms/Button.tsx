@@ -3,7 +3,7 @@ import { type ButtonHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/utils/style";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -36,30 +36,30 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  isLoading?: boolean;
+  loading?: boolean;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, isLoading, children, disabled, ...props },
+    { className, variant, size, loading, children, disabled, ...props },
     ref,
   ) => {
     const a11yProps = {
-      "aria-busy": isLoading && true,
-      "aria-disabled": (disabled || isLoading) && true,
+      "aria-busy": loading && true,
+      "aria-disabled": (disabled || loading) && true,
     };
 
     return (
       <button
         className={cn(buttonVariants({ variant, size }), className)}
         ref={ref}
-        disabled={disabled || isLoading}
+        disabled={disabled || loading}
         {...a11yProps}
         {...props}
       >
-        {isLoading ? (
+        {loading ? (
           <span
-            className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+            className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
             aria-hidden="true"
           />
         ) : null}

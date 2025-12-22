@@ -71,16 +71,17 @@ export const FileUploader = ({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        tabIndex={0}
         role="region"
         aria-label="File upload drop zone"
         className={cn(
-          "relative rounded-lg border-2 border-dashed p-4 transition-all sm:p-6 md:p-8",
+          "relative rounded-lg border-2 border-dashed p-4 transition-colors sm:p-6 md:p-8",
           isDragging
-            ? "border-blue-600 bg-blue-50"
-            : "border-gray-300 bg-gray-50",
+            ? "border-blue-600 bg-blue-100"
+            : "border-gray-300 bg-gray-100",
           disabled && "cursor-not-allowed opacity-50",
           !disabled &&
-            "hover:border-blue-400 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
+            " hover:bg-blue-50 focus-visible:outline-none focus-visible:border-blue-600",
         )}
       >
         <div className="flex flex-col items-center justify-center gap-2 sm:gap-4 text-center">
@@ -92,11 +93,7 @@ export const FileUploader = ({
               )}
               aria-hidden="true"
             >
-              <Icon
-                type="upload"
-                size="xl"
-                className="transition-colors text-white"
-              />
+              <Icon type="upload" size="xl" className="text-white" />
             </div>
 
             <p className="text-base font-semibold text-gray-950 sm:text-lg md:text-xl">
