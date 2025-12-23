@@ -117,11 +117,10 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
             {/* Estimated Time to Complete */}
             {timeLeft > 0 && (
               <Metric
-                className="ml-0 sm:ml-auto"
                 label="Time Left"
                 direction="column"
                 size="small"
-                value={`approx. ${formatTime(timeLeft)}`}
+                value={`${formatTime(timeLeft)}`}
               />
             )}
           </div>

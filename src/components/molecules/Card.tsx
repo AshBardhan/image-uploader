@@ -20,7 +20,7 @@ const cardVariants = cva("rounded-xl border shadow-lg transition-colors", {
   },
 });
 
-interface CardProps extends HTMLAttributes<HTMLElement> {
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
   theme?: "default" | "success" | "error";
   padded?: boolean;
   children: ReactNode;
