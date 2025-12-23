@@ -80,13 +80,9 @@ export const FilesPreview = ({
           </div>
         </div>
         {total > 0 ? (
-          <div className="columns-1 gap-x-2 sm:columns-2 sm:gap-x-3 lg:columns-3 lg:gap-x-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {files.map((file) => (
-              <FileItem
-                {...file}
-                key={file.id}
-                className="mb-2 sm:mb-3 lg:mb-4"
-              />
+              <FileItem {...file} key={file.id} />
             ))}
           </div>
         ) : (

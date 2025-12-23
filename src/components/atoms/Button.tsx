@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { type ButtonHTMLAttributes, forwardRef } from "react";
+import { type ButtonHTMLAttributes, type Ref } from "react";
 import { cn } from "@/utils/style";
 
 const buttonVariants = cva(
@@ -33,40 +33,43 @@ const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps
+interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   loading?: boolean;
+  ref?: Ref<HTMLButtonElement>;
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className, variant, size, loading, children, disabled, ...props },
-    ref,
-  ) => {
-    const a11yProps = {
-      "aria-busy": loading && true,
-      "aria-disabled": (disabled || loading) && true,
-    };
+export function Button({
+  className,
+  variant,
+  size,
+  loading,
+  children,
+  disabled,
+  ref,
+  ...props
+}: ButtonProps) {
+  const a11yProps = {
+    "aria-busy": loading && true,
+    "aria-disabled": (disabled || loading) && true,
+  };
 
-    return (
-      <button
-        className={cn(buttonVariants({ variant, size }), className)}
-        ref={ref}
-        disabled={disabled || loading}
-        {...a11yProps}
-        {...props}
-      >
-        {loading ? (
-          <span
-            className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-            aria-hidden="true"
-          />
-        ) : null}
-        {children}
-      </button>
-    );
-  },
-);
-
-Button.displayName = "Button";
+  return (
+    <button
+      className={cn(buttonVariants({ variant, size }), className)}
+      ref={ref}
+      disabled={disabled || loading}
+      {...a11yProps}
+      {...props}
+    >
+      {loading ? (
+        <span
+          className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+          aria-hidden="true"
+        />
+      ) : null}
+      {children}
+    </button>
+  );
+}

@@ -1,6 +1,6 @@
-import type { HTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes, ReactNode, Ref } from "react";
 import { cn } from "@/utils/style";
-import { cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 
 const cardVariants = cva("rounded-xl border shadow-lg transition-colors", {
   variants: {
@@ -20,22 +20,28 @@ const cardVariants = cva("rounded-xl border shadow-lg transition-colors", {
   },
 });
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  theme?: "default" | "success" | "error";
-  padded?: boolean;
+interface CardProps
+  extends HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {
   children: ReactNode;
   className?: string;
+  ref?: Ref<HTMLDivElement>;
 }
 
 export function Card({
-  theme = "default",
-  padded = true,
+  theme,
+  padded,
   children,
   className,
+  ref,
   ...props
 }: CardProps) {
   return (
-    <div className={cn(cardVariants({ theme, padded }), className)} {...props}>
+    <div
+      ref={ref}
+      className={cn(cardVariants({ theme, padded }), className)}
+      {...props}
+    >
       {children}
     </div>
   );
