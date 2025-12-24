@@ -7,6 +7,7 @@ const cardVariants = cva("rounded-xl border shadow-lg transition-colors", {
     theme: {
       default: "bg-white border-gray-300",
       success: "bg-green-50 border-green-400 border-2",
+      warning: "bg-yellow-50 border-yellow-400 border-2",
       error: "bg-red-50 border-red-400 border-2",
     },
     padded: {

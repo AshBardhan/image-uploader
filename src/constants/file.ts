@@ -3,7 +3,7 @@ import type { FileStatus, FileType } from "@/types/file";
 interface FileStatusInfo {
   label: string;
   color: string;
-  variant: "default" | "info" | "success" | "error";
+  variant: "default" | "info" | "success" | "danger";
 }
 
 export const FILE_STATUS_MAP: Record<FileStatus, FileStatusInfo> = {
@@ -22,7 +22,7 @@ export const FILE_STATUS_MAP: Record<FileStatus, FileStatusInfo> = {
     color: "text-green-700",
     variant: "success",
   },
-  error: { label: "Failed", color: "text-red-700", variant: "error" },
+  error: { label: "Failed", color: "text-red-700", variant: "danger" },
 };
 
 interface FileTypeInfo {

@@ -6,6 +6,7 @@ import { Icon } from "@/components/atoms/Icon";
 import { formatFileSize } from "@/utils/file";
 import { formatTime } from "@/utils/time";
 import type { File, FileUploadTime } from "@/types/file";
+import { AnimatePresence, motion } from "framer-motion";
 
 export interface FilesUploadStatsProps {
   files: File[];
@@ -51,117 +52,155 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
 
   const timeLeft = calculateETA();
 
-  // Hide if no active upload states
-  if (uploadingFiles === 0 && completedFiles === 0 && failedFiles === 0) {
-    return null;
-  } else {
-    // Hide if there are pending files alongside completed/failed files
-    // (user added new files after previous upload finished)
-    if (pendingFiles > 0) {
-      return null;
-    }
-  }
-
-  const getFileCardTheme = () => {
-    return isUploading
-      ? "default"
-      : hasFailed
-        ? "error"
-        : isUploadComplete
-          ? "success"
-          : "default";
-  };
-
   return (
-    <Card theme={getFileCardTheme()}>
-      {(isUploading || totalFiles > completedFiles + failedFiles) && (
-        <div
-          className="space-y-3 sm:space-y-4"
-          role="status"
-          aria-live="polite"
+    <AnimatePresence mode="wait">
+      {isUploading && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          <Text variant="h4">
-            {hasFailed ? "Re-uploading" : "Uploading"} Files
-          </Text>
-          {/* Progress Bar */}
-          <ProgressBar
-            progress={uploadProgress}
-            variant={
-              hasFailed && !isUploading
-                ? "error"
-                : isUploadComplete && totalFiles > 0
-                  ? "success"
-                  : "info"
-            }
-            size="lg"
-            showPercentage={true}
-          />
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-            {/* Uploaded Bytes */}
-            <Metric
-              label="Data"
-              direction="column"
-              size="small"
-              value={`${formatFileSize(bytesUploaded)}/${formatFileSize(bytesTotal)}`}
+          <Card
+            className="space-y-3 sm:space-y-4"
+            role="status"
+            aria-live="polite"
+          >
+            <Text variant="h4">
+              {hasFailed ? "Re-uploading" : "Uploading"} Files
+            </Text>
+            {/* Progress Bar */}
+            <ProgressBar
+              progress={uploadProgress}
+              variant={
+                hasFailed && !isUploading
+                  ? "danger"
+                  : isUploadComplete && totalFiles > 0
+                    ? "success"
+                    : "info"
+              }
+              size="lg"
+              showPercentage={true}
             />
-
-            {/* Files Uploaded */}
-            <Metric
-              label="Uploaded"
-              direction="column"
-              size="small"
-              value={`${completedFiles}/${totalFiles}`}
-            />
-
-            {/* Estimated Time to Complete */}
-            {timeLeft > 0 && (
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+              {/* Uploaded Bytes */}
               <Metric
-                label="Time Left"
+                label="Data"
                 direction="column"
                 size="small"
-                value={`${formatTime(timeLeft)}`}
+                value={`${formatFileSize(bytesUploaded)}/${formatFileSize(bytesTotal)}`}
               />
-            )}
-          </div>
-        </div>
+
+              {/* Files Uploaded */}
+              <Metric
+                label="Uploaded"
+                direction="column"
+                size="small"
+                value={`${completedFiles}/${totalFiles}`}
+              />
+
+              {/* Files Failed */}
+              {failedFiles > 0 && (
+                <Metric
+                  label="Failed"
+                  direction="column"
+                  size="small"
+                  value={`${failedFiles}/${totalFiles}`}
+                />
+              )}
+
+              {/* Estimated Time to Complete */}
+              {timeLeft > 0 && (
+                <Metric
+                  label="Time Left"
+                  direction="column"
+                  size="small"
+                  value={`${formatTime(timeLeft)}`}
+                />
+              )}
+            </div>
+          </Card>
+        </motion.div>
       )}
 
-      {/* Status Message */}
-      {!isUploading && isUploadComplete && (
-        <div
-          className="flex items-center gap-2 sm:gap-4"
-          role="status"
-          aria-live="polite"
+      {/* Success Message */}
+      {completedFiles > 0 && isUploadComplete && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          <Icon type="check" size="xl" className="text-green-500" />
-          <div>
-            <Text variant="h4" theme="success">
-              All files uploaded successfully
-            </Text>
-            <Text className="text-xs">Please clear the completed files</Text>
-          </div>
-        </div>
+          <Card
+            theme="success"
+            className="flex items-center gap-2 sm:gap-4"
+            role="status"
+            aria-live="polite"
+          >
+            <Icon type="check" size="xl" className="text-green-500" />
+            <div>
+              <Text variant="h4" theme="success">
+                All files uploaded successfully
+              </Text>
+              <Text className="text-xs">Please clear the completed files</Text>
+            </div>
+          </Card>
+        </motion.div>
       )}
 
+      {/* Failed Message */}
       {hasFailed && !isUploading && (
-        <div
-          className="flex items-center gap-2 sm:gap-4"
-          role="alert"
-          aria-live="assertive"
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          <Icon type="error" size="xl" className="text-red-500" />
-          <div>
-            <Text variant="h4" theme="danger">
-              Unable to upload files
-            </Text>
+          <Card
+            theme="error"
+            className="flex items-center gap-2 sm:gap-4"
+            role="alert"
+            aria-live="assertive"
+          >
+            <Icon type="error" size="xl" className="text-red-500" />
+            <div>
+              <Text variant="h4" theme="danger">
+                Unable to upload files
+              </Text>
 
-            <Text className="text-xs">
-              Please retry to upload again after some time
-            </Text>
-          </div>
-        </div>
+              <Text className="text-xs">
+                Please retry to upload again after some time
+              </Text>
+            </div>
+          </Card>
+        </motion.div>
       )}
-    </Card>
+
+      {/* Warning Message */}
+      {pendingFiles > 0 && !isUploading && !hasFailed && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card
+            theme="warning"
+            className="flex items-center gap-2 sm:gap-4"
+            role="status"
+            aria-live="polite"
+          >
+            <Icon type="info" size="xl" className="text-yellow-500" />
+            <div>
+              <Text variant="h4" theme="warning">
+                {pendingFiles} file{pendingFiles > 1 ? "s" : ""} pending upload
+              </Text>
+              <Text className="text-xs">Please upload the pending files</Text>
+            </div>
+          </Card>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

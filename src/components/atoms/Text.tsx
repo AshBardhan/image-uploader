@@ -15,8 +15,9 @@ const textVariants = cva("transition-colors", {
       div: "text-sm text-gray-700 md:text-base",
     },
     theme: {
-      danger: "text-red-500",
       success: "text-green-500",
+      warning: "text-yellow-500",
+      danger: "text-red-500",
       white: "text-white",
       default: "",
     },
@@ -27,7 +28,7 @@ type TextVariant = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "div";
 
 interface TextProps extends HTMLAttributes<HTMLElement> {
   variant?: TextVariant;
-  theme?: "danger" | "success" | "white" | "default";
+  theme?: "danger" | "warning" | "success" | "white" | "default";
   children: ReactNode;
 }
 

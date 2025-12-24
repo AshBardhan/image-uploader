@@ -86,23 +86,11 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
       sync();
     };
 
-    const onUploadError = (file: any, error: any) => {
-      showToast({
-        theme: "error",
-        title: "Upload Failed",
-        message:
-          error?.message ||
-          `Failed to upload ${file?.name}. Please check your connection and retry.`,
-          duration: 3000,  
-      });
-      sync();
-    };
-
     uppy.on("file-added", onFileAdded);
     uppy.on("file-removed", sync);
     uppy.on("upload-progress", sync);
     uppy.on("thumbnail:generated", sync);
-    uppy.on("upload-error", onUploadError);
+    uppy.on("upload-error", sync);
     uppy.on("upload-success", sync);
 
     uppyRef.current = uppy;
@@ -127,7 +115,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
             title: "Upload restriction",
             message:
               error?.message || "File cannot be uploaded due to restrictions.",
-            duration: 3000,  
+            duration: 3000,
           });
         }
       });

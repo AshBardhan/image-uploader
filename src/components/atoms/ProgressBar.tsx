@@ -25,7 +25,7 @@ const progressBarVariants = cva(
         default: "bg-blue-700",
         info: "bg-blue-700",
         success: "bg-green-700",
-        error: "bg-red-700",
+        danger: "bg-red-700",
         warning: "bg-yellow-700",
       },
     },
