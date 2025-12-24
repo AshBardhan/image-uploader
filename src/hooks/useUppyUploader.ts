@@ -14,10 +14,11 @@ const DEFAULT_CONFIG: Required<UppyUploaderConfig> = {
     "image/gif",
     "image/webp",
   ],
-  endpoint: "https://api.cloudinary.com/v1_1/ash-test/image/upload",
-  uploadPreset: "ash-test-upload",
-  thumbnailWidth: 200,
-  thumbnailHeight: 200,
+  endpoint: import.meta.env.VITE_CLOUDINARY_ENDPOINT || "",
+  uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "",
+  thumbnailWidth: 600,
+  thumbnailHeight: 400,
+  concurrentUploadLimit: 2,
 };
 
 function mapUppyFiles(uppy: Uppy): File[] {
@@ -68,6 +69,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
         fieldName: "file",
         bundle: false,
         allowedMetaFields: ["upload_preset"],
+        limit: finalConfig.concurrentUploadLimit,
       })
       .use(ThumbnailGenerator, {
         thumbnailWidth: finalConfig.thumbnailWidth,
@@ -80,14 +82,36 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     };
 
     const onFileAdded = (file: any) => {
+      console.log("File added:", file);
       uppy.setFileMeta(file.id, {
         upload_preset: finalConfig.uploadPreset,
       });
       sync();
     };
 
+    const revokeThumbnails = () => {
+      uppy.getFiles().forEach((file) => {
+        if (
+          file.preview &&
+          typeof file.preview === "string" &&
+          file.preview.startsWith("blob:")
+        ) {
+          URL.revokeObjectURL(file.preview);
+        }
+      });
+    };
+
     uppy.on("file-added", onFileAdded);
-    uppy.on("file-removed", sync);
+    uppy.on("file-removed", (file) => {
+      if (
+        file.preview &&
+        typeof file.preview === "string" &&
+        file.preview.startsWith("blob:")
+      ) {
+        URL.revokeObjectURL(file.preview);
+      }
+      sync();
+    });
     uppy.on("upload-progress", sync);
     uppy.on("thumbnail:generated", sync);
     uppy.on("upload-error", sync);
@@ -96,12 +120,14 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     uppyRef.current = uppy;
 
     return () => {
+      revokeThumbnails();
       uppy.destroy();
     };
   }, [finalConfig, showToast]);
 
   const addFiles = useCallback(
     (fileList: FileList) => {
+      console.log("Adding files:", [...fileList]);
       Array.from(fileList).forEach((file) => {
         try {
           uppyRef.current?.addFile({

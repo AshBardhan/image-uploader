@@ -15,6 +15,7 @@ A modern, performant image uploader built with React, Uppy, and Cloudinary. It s
 - Error handling with toast notifications
 - Retry, cancel, and clear actions for uploads
 - Responsive, accessible UI
+- Configurable cloudinary upload credentials and settings
 
 ## Tech Stack
 
@@ -42,6 +43,13 @@ cd image-uploader
 
 # Install dependencies
 npm install
+
+
+# Configure Cloudinary credentials (required)
+cp .env.example .env
+# Then edit .env with your own Cloudinary endpoint and upload preset:
+# VITE_CLOUDINARY_ENDPOINT=https://api.cloudinary.com/v1_1/<your-cloud-name>/image/upload
+# VITE_CLOUDINARY_UPLOAD_PRESET=<your-upload-preset>
 
 # Run development server
 npm run dev
@@ -72,8 +80,9 @@ image-uploader/
 │   ├── utils/
 │   ├── App.tsx
 │   ├── main.tsx
+├── eslint.config.js
 ├── package.json
-├── tailwind.config.js
+├── tsconfig.json
 ├── vite.config.ts
 ```
 
@@ -91,10 +100,6 @@ image-uploader/
 
 ## Future Implementations
 
-- [ ] Add React error boundaries for crash protection
-- [ ] Lazy load thumbnails for large file lists
-- [ ] Make upload concurrency configurable
-- [ ] Revoke object URLs for thumbnails on file removal
 - [ ] Add unit and integration tests
 - [ ] Add dark mode support
 - [ ] Add drag-to-reorder for files

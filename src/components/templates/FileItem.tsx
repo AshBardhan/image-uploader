@@ -104,6 +104,7 @@ export const FileItem = ({
               <img
                 src={preview}
                 alt={`Preview of ${name}`}
+                loading="lazy"
                 className={cn(
                   "w-full object-cover transition-transform duration-300",
                   "group-hover:scale-105",

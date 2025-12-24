@@ -24,4 +24,5 @@ export interface UppyUploaderConfig {
   uploadPreset?: string;
   thumbnailWidth?: number;
   thumbnailHeight?: number;
+  concurrentUploadLimit?: number;
 }
