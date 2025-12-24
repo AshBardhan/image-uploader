@@ -63,7 +63,7 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
       message: options.message,
       theme: options.theme ?? "info",
       position: options.position ?? "top",
-      duration: options.duration ?? 10_000,
+      duration: options.duration ?? 5000,
     };
 
     setToasts((prev) => [...prev.slice(-MAX_TOASTS + 1), toast]);

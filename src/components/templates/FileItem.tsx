@@ -44,9 +44,7 @@ export const FileItem = ({
     setShowStatusMessage(false);
   };
 
-  const { itemRef, contentRef, observe } = useMasonryItem([
-    preview,
-  ]);
+  const { itemRef, contentRef, observe } = useMasonryItem([preview]);
 
   return (
     <Card
@@ -65,11 +63,11 @@ export const FileItem = ({
         {/* Image taking entire cell space */}
         {isFileLoading ? (
           // Loading skeleton
-          <div className="animate-pulse relative aspect-square md:aspect-video">
+          <div className="relative aspect-square md:aspect-video">
             <SkeletonBar className="absolute inset-0" />
             <Icon
               type="image"
-              className="text-gray-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              className="text-gray-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
               size="lg"
             />
           </div>
@@ -186,7 +184,7 @@ export const FileItem = ({
         )}
 
         {/* File name overlay on hover */}
-        <div className="absolute inset-x-0 top-0 translate-y-[-100%] bg-black/90 p-2 backdrop-blur-sm transition-transform group-hover:translate-y-0">
+        <div className="absolute inset-x-0 top-0 -translate-y-full bg-black/90 p-2 backdrop-blur-sm transition-transform group-hover:translate-y-0">
           <div className="truncate text-xs sm:text-sm font-medium text-white">
             {name}
           </div>

@@ -93,6 +93,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
         message:
           error?.message ||
           `Failed to upload ${file?.name}. Please check your connection and retry.`,
+          duration: 3000,  
       });
       sync();
     };
@@ -126,6 +127,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
             title: "Upload restriction",
             message:
               error?.message || "File cannot be uploaded due to restrictions.",
+            duration: 3000,  
           });
         }
       });
@@ -138,8 +140,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     setTime({ start: now, current: now });
     showToast({
       title: "Uploading Started",
-      message: "Your files are being uploaded.",
-      duration: 5000,
+      message: "Your files are being uploaded to Cloudinary server.",
     });
     uppyRef.current?.upload();
   }, [showToast]);
@@ -157,7 +158,6 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     showToast({
       title: "Retrying Failed Uploads",
       message: "Attempting to re-upload all failed files.",
-      duration: 5000,
     });
   }, [files, showToast]);
 
@@ -169,7 +169,6 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
       theme: "success",
       title: "Cleared Completed Files",
       message: "All completed files have been removed from the list.",
-      duration: 5000,
     });
   }, [files, showToast]);
 

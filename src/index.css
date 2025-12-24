@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --animate-slide: slide 1s linear infinite forwards;
+
+  @keyframes slide {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: -100% 0;
+    }
+  }
+}
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
