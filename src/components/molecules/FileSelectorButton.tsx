@@ -1,9 +1,9 @@
 import { useRef } from "react";
+import type { FileType } from "@/types/file";
+import { FILE_TYPE_MAP } from "@/constants/file";
 import { cn } from "@/utils/style";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
-import type { FileType } from "@/types/file";
-import { FILE_TYPE_MAP } from "@/constants/file";
 
 export interface FileSelectorButtonProps {
   onFilesSelected: (files: FileList) => void;

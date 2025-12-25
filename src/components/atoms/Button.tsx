@@ -1,5 +1,5 @@
+import type { ButtonHTMLAttributes, Ref } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { type ButtonHTMLAttributes, type Ref } from "react";
 import { cn } from "@/utils/style";
 
 const buttonVariants = cva(
@@ -44,7 +44,7 @@ interface ButtonProps
   ref?: Ref<HTMLButtonElement>;
 }
 
-export function Button({
+export const Button = ({
   className,
   variant,
   size,
@@ -53,7 +53,7 @@ export function Button({
   disabled,
   ref,
   ...props
-}: ButtonProps) {
+}: ButtonProps) => {
   const a11yProps = {
     "aria-busy": loading && true,
     "aria-disabled": (disabled || loading) && true,
@@ -76,4 +76,4 @@ export function Button({
       {children}
     </button>
   );
-}
+};

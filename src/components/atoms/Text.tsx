@@ -32,13 +32,13 @@ interface TextProps extends HTMLAttributes<HTMLElement> {
   children: ReactNode;
 }
 
-export function Text({
+export const Text = ({
   variant = "div",
   theme = "default",
   children,
   className,
   ...props
-}: TextProps) {
+}: TextProps) => {
   const Tag = variant;
 
   return (
@@ -46,4 +46,4 @@ export function Text({
       {children}
     </Tag>
   );
-}
+};

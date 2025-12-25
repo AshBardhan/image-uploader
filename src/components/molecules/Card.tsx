@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactNode, Ref } from "react";
-import { cn } from "@/utils/style";
 import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/utils/style";
 
 const cardVariants = cva("rounded-xl border shadow-xl transition-colors", {
   variants: {
@@ -29,14 +29,14 @@ interface CardProps
   ref?: Ref<HTMLDivElement>;
 }
 
-export function Card({
+export const Card = ({
   theme,
   padded,
   children,
   className,
   ref,
   ...props
-}: CardProps) {
+}: CardProps) => {
   return (
     <div
       ref={ref}
@@ -46,4 +46,4 @@ export function Card({
       {children}
     </div>
   );
-}
+};

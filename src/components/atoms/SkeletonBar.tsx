@@ -4,7 +4,7 @@ interface SkeletonBarProps {
   className?: string;
 }
 
-export function SkeletonBar({ className }: SkeletonBarProps) {
+export const SkeletonBar = ({ className }: SkeletonBarProps) => {
   return (
     <div
       aria-hidden="true"
@@ -14,4 +14,4 @@ export function SkeletonBar({ className }: SkeletonBarProps) {
       )}
     />
   );
-}
+};

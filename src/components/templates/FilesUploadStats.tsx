@@ -1,12 +1,12 @@
-import { Text } from "@/components/atoms/Text";
-import { Card } from "@/components/molecules/Card";
-import { ProgressBar } from "@/components/atoms/ProgressBar";
-import { Metric } from "@/components/molecules/Metric";
-import { Icon } from "@/components/atoms/Icon";
+import { AnimatePresence, motion } from "framer-motion";
+import type { File, FileUploadTime } from "@/types/file";
 import { formatFileSize } from "@/utils/file";
 import { formatTime } from "@/utils/time";
-import type { File, FileUploadTime } from "@/types/file";
-import { AnimatePresence, motion } from "framer-motion";
+import { Icon } from "@/components/atoms/Icon";
+import { Text } from "@/components/atoms/Text";
+import { ProgressBar } from "@/components/atoms/ProgressBar";
+import { Card } from "@/components/molecules/Card";
+import { Metric } from "@/components/molecules/Metric";
 
 export interface FilesUploadStatsProps {
   files: File[];

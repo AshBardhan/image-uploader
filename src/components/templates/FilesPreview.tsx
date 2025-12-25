@@ -1,11 +1,11 @@
+import { AnimatePresence, motion } from "framer-motion";
 import type { File, FileType } from "@/types/file";
+import { FILE_TYPE_MAP } from "@/constants/file";
 import { Text } from "@/components/atoms/Text";
-import { FileItem } from "@/components/templates/FileItem";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
-import { FILE_TYPE_MAP } from "@/constants/file";
-import { Card } from "../molecules/Card";
-import { AnimatePresence, motion } from "framer-motion";
+import { Card } from "@/components/molecules/Card";
+import { FileItem } from "@/components/templates/FileItem";
 
 export interface FilesPreviewProps {
   files: File[];

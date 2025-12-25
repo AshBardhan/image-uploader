@@ -82,7 +82,6 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     };
 
     const onFileAdded = (file: any) => {
-      console.log("File added:", file);
       uppy.setFileMeta(file.id, {
         upload_preset: finalConfig.uploadPreset,
       });
@@ -127,7 +126,6 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
 
   const addFiles = useCallback(
     (fileList: FileList) => {
-      console.log("Adding files:", [...fileList]);
       Array.from(fileList).forEach((file) => {
         try {
           uppyRef.current?.addFile({

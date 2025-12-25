@@ -1,5 +1,5 @@
-import { cva } from "class-variance-authority";
 import { useEffect, useRef, useState } from "react";
+import { cva } from "class-variance-authority";
 import { cn } from "@/utils/style";
 import { Icon, type IconType } from "@/components/atoms/Icon";
 import { Text } from "@/components/atoms/Text";

@@ -1,11 +1,11 @@
 import { useState } from "react";
+import type { FileType } from "@/types/file";
+import { FILE_TYPE_MAP } from "@/constants/file";
 import { cn } from "@/utils/style";
 import { Icon } from "@/components/atoms/Icon";
 import { Text } from "@/components/atoms/Text";
 import { FileSelectorButton } from "@/components/molecules/FileSelectorButton";
 import { Card } from "@/components/molecules/Card";
-import type { FileType } from "@/types/file";
-import { FILE_TYPE_MAP } from "@/constants/file";
 
 export interface FileUploaderProps {
   onFilesSelected: (files: FileList) => void;
