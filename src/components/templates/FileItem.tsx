@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { File } from "@/types/file";
 import { FILE_STATUS_MAP } from "@/constants/file";
 import { cn } from "@/utils/style";
-import { useMasonryItem } from "@/hooks/useMasonaryItem";
+import { useMasonryItem } from "@/hooks/useMasonryItem";
 import { Icon } from "@/components/atoms/Icon";
 import { Button } from "@/components/atoms/Button";
 import { Text } from "@/components/atoms/Text";
@@ -16,6 +16,7 @@ interface FileItemProps extends File {
   className?: string;
 }
 
+/* Memoised File Item Component with file details and status */
 export const FileItem = memo(
   ({ name, preview, progress, status, error, className }: FileItemProps) => {
     const [showStatusMessage, setShowStatusMessage] = useState(false);
@@ -23,23 +24,27 @@ export const FileItem = memo(
     const isFileLoading =
       !preview && (status === "pending" || status === "uploading");
 
+    /* Show status message on completion or error */
     useEffect(() => {
       if (status === "completed" || status === "error") {
         setShowStatusMessage(true);
       }
     }, [status]);
 
+    /* Reset image loaded state when preview changes */
     useEffect(() => {
       if (preview) {
         setImageLoaded(false);
       }
     }, [preview]);
 
+    /* Close status message handler */
     const closeMessage = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
       setShowStatusMessage(false);
     };
 
+    /* Masonry layout hook variables and functions */
     const { itemRef, contentRef, observe } = useMasonryItem([preview]);
 
     return (
@@ -121,11 +126,12 @@ export const FileItem = memo(
                 className="flex aspect-square items-center justify-center bg-gray-200 md:aspect-video"
                 aria-label="No preview available"
               >
+                {/* Fallback Content when no preview is available */}
                 <Icon type="image" className="text-gray-400" size="lg" />
               </motion.div>
             )}
 
-            {/* Status Badge - Absolute top-right */}
+            {/* File Upload Status Badge */}
             {!isFileLoading && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -143,7 +149,7 @@ export const FileItem = memo(
               </motion.div>
             )}
 
-            {/* Progress Bar - Absolute bottom-center (only when uploading) */}
+            {/* File Upload Progress Bar */}
             {status === "uploading" && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -156,7 +162,7 @@ export const FileItem = memo(
               </motion.div>
             )}
 
-            {/* Success Message - Absolute bottom-center */}
+            {/* File Upload Success Message */}
             {status === "completed" && showStatusMessage && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -182,7 +188,7 @@ export const FileItem = memo(
               </motion.div>
             )}
 
-            {/* Error Message - Absolute bottom-center */}
+            {/* File Upload Error Message */}
             {status === "error" && showStatusMessage && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -213,7 +219,7 @@ export const FileItem = memo(
               </motion.div>
             )}
 
-            {/* File name overlay on hover */}
+            {/* Sliding File Name Overlay */}
             {!isFileLoading && preview && (
               <div className="absolute inset-x-0 top-0 -translate-y-full bg-black/20 p-2 backdrop-blur-sm transition-transform group-hover:translate-y-0">
                 <Text className="truncate text-xs md:text-sm font-medium text-white">

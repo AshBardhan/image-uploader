@@ -32,9 +32,9 @@ export const FilesPreview = ({
 
   return (
     <AnimatePresence mode="wait">
-      <section className="flex flex-col gap-2 sm:gap-4">
+      <section className="flex flex-col gap-3 sm:gap-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <Text variant="h3" className="capitalize">
+          <Text variant="h2" className="capitalize">
             {FILE_TYPE_MAP[type].label}s {total > 0 && `(${total})`}
           </Text>
           {total > 0 && (
@@ -46,6 +46,7 @@ export const FilesPreview = ({
               transition={{ duration: 0.2 }}
               className="flex flex-wrap gap-2"
             >
+              {/* Retry Failed action button */}
               {failed > 0 && (
                 <Button onClick={onRetryFailed} variant="danger" size="sm">
                   <Icon type="retry" size="sm" />
@@ -56,6 +57,7 @@ export const FilesPreview = ({
                 </Button>
               )}
 
+              {/* Clear Completed action button */}
               {completed > 0 && (
                 <Button
                   onClick={onClearCompleted}
@@ -71,6 +73,7 @@ export const FilesPreview = ({
                 </Button>
               )}
 
+              {/* Upload All action button */}
               <Button
                 onClick={onUploadAll}
                 disabled={pending === 0 || uploading > 0}
@@ -82,6 +85,7 @@ export const FilesPreview = ({
                 Upload
               </Button>
 
+              {/* Cancel action button */}
               <Button
                 onClick={onCancelAll}
                 variant="outline"
@@ -103,6 +107,7 @@ export const FilesPreview = ({
             transition={{ duration: 0.2 }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
           >
+            {/* File Items Grid */}
             {files.map((file) => (
               <FileItem key={file.id} {...file} />
             ))}
@@ -116,6 +121,7 @@ export const FilesPreview = ({
             transition={{ duration: 0.4 }}
           >
             <Card>
+              {/* Empty Available Files Message */}
               <Text variant="p" className="text-center py-5">
                 No {type === "all" ? "files" : type + "s"} available for upload.
               </Text>

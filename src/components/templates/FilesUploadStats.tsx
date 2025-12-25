@@ -13,6 +13,7 @@ export interface FilesUploadStatsProps {
   time: FileUploadTime;
 }
 
+/* Files Upload Stats Component to display upload progress, stats, and estimated time */
 export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
   const { start, current } = time;
   const totalFiles = files.length;
@@ -34,6 +35,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
   const uploadProgress =
     bytesTotal > 0 ? Math.round((bytesUploaded / bytesTotal) * 100) : 0;
 
+  /* Calculate estimated time left based on current uploaded data and speed */
   const calculateETA = (): number => {
     if (bytesUploaded === 0 || start === 0 || start === current) {
       return 0;
@@ -54,6 +56,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
 
   return (
     <AnimatePresence mode="wait">
+      {/* Uploading Stats Card */}
       {isUploading && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -69,6 +72,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
             <Text variant="h4">
               {hasFailed ? "Re-uploading" : "Uploading"} Files
             </Text>
+
             {/* Progress Bar */}
             <ProgressBar
               progress={uploadProgress}
@@ -77,7 +81,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
             />
             {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-              {/* Uploaded Bytes */}
+              {/* Uploaded Bytes Stat */}
               <Metric
                 label="Data"
                 direction="column"
@@ -85,7 +89,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
                 value={`${formatFileSize(bytesUploaded)}/${formatFileSize(bytesTotal)}`}
               />
 
-              {/* Files Uploaded */}
+              {/* Files Uploaded Stat */}
               <Metric
                 label="Uploaded"
                 direction="column"
@@ -93,7 +97,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
                 value={`${completedFiles}/${totalFiles}`}
               />
 
-              {/* Files Failed */}
+              {/* Files Failed Stat */}
               {failedFiles > 0 && (
                 <Metric
                   label="Failed"
@@ -103,7 +107,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
                 />
               )}
 
-              {/* Estimated Time to Complete */}
+              {/* Estimated Time to Complete Stat */}
               {timeLeft > 0 && (
                 <Metric
                   label="Time Left"
@@ -117,7 +121,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
         </motion.div>
       )}
 
-      {/* Success Message */}
+      {/* Success Message Card */}
       {completedFiles > 0 && isUploadComplete && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -142,7 +146,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
         </motion.div>
       )}
 
-      {/* Failed Message */}
+      {/* Failed Message Card */}
       {hasFailed && !isUploading && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -161,7 +165,6 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
               <Text variant="h4" theme="danger">
                 Unable to upload files
               </Text>
-
               <Text className="text-xs">
                 Please retry to upload again after some time
               </Text>
@@ -170,7 +173,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
         </motion.div>
       )}
 
-      {/* Warning Message */}
+      {/* Warning Message Card */}
       {pendingFiles > 0 && !isUploading && !hasFailed && (
         <motion.div
           initial={{ opacity: 0 }}

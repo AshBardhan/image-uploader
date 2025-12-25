@@ -21,7 +21,8 @@ const DEFAULT_CONFIG: Required<UppyUploaderConfig> = {
   concurrentUploadLimit: 2,
 };
 
-function mapUppyFiles(uppy: Uppy): File[] {
+/* Send a copy of updated Uppy files */
+function getLocalFiles(uppy: Uppy): File[] {
   return uppy.getFiles().map((file) => ({
     id: file.id,
     name: file.name,
@@ -41,6 +42,7 @@ function mapUppyFiles(uppy: Uppy): File[] {
   }));
 }
 
+/* Custom hook to manage Uppy file uploader */
 export function useUppyUploader(config?: UppyUploaderConfig) {
   const { showToast } = useToast();
   const uppyRef = useRef<Uppy | null>(null);
@@ -56,6 +58,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
   }, [config]);
 
   useEffect(() => {
+    /* Initialize Uppy instance with configuration and plugins */
     const uppy = new Uppy({
       autoProceed: false,
       restrictions: {
@@ -76,11 +79,13 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
         thumbnailHeight: finalConfig.thumbnailHeight,
       });
 
+    /* Synchronize Uppy files with local state */
     const sync = () => {
-      setFiles(mapUppyFiles(uppy));
+      setFiles(getLocalFiles(uppy));
       setTime((prev) => (prev.start ? { ...prev, current: Date.now() } : prev));
     };
 
+    /* Set upload preset metadata when a file is added */
     const onFileAdded = (file: any) => {
       uppy.setFileMeta(file.id, {
         upload_preset: finalConfig.uploadPreset,
@@ -88,6 +93,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
       sync();
     };
 
+    /* Revoke generated thumbnail URLs to free up memory */
     const revokeThumbnails = () => {
       uppy.getFiles().forEach((file) => {
         if (
@@ -100,6 +106,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
       });
     };
 
+    /* Uppy event listeners */
     uppy.on("file-added", onFileAdded);
     uppy.on("file-removed", (file) => {
       if (
@@ -124,6 +131,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     };
   }, [finalConfig, showToast]);
 
+  /* Add new files to upload */
   const addFiles = useCallback(
     (fileList: FileList) => {
       Array.from(fileList).forEach((file) => {
@@ -147,6 +155,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     [showToast],
   );
 
+  /* Start uploading all files */
   const uploadAll = useCallback(() => {
     const now = Date.now();
     setTime({ start: now, current: now });
@@ -157,12 +166,14 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     uppyRef.current?.upload();
   }, [showToast]);
 
+  /* Cancel all ongoing uploads */
   const cancelAll = useCallback(() => {
     uppyRef.current?.cancelAll();
     setFiles([]);
     setTime({ start: 0, current: 0 });
   }, []);
 
+  /* Retry all failed uploads */
   const retryFailed = useCallback(() => {
     files
       .filter((f) => f.status === "error")
@@ -174,6 +185,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     });
   }, [files, showToast]);
 
+  /* Clear all completed uploads from the list */
   const clearCompleted = useCallback(() => {
     files
       .filter((f) => f.status === "completed")

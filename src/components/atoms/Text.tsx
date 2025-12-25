@@ -32,6 +32,7 @@ interface TextProps extends HTMLAttributes<HTMLElement> {
   children: ReactNode;
 }
 
+/* Text Component with variant and theme support */
 export const Text = ({
   variant = "div",
   theme = "default",

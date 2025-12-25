@@ -85,6 +85,7 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
     <ToastContext.Provider value={{ showToast, hideToast, hideAllToasts }}>
       {children}
 
+      {/* Toast notifications */}
       {createPortal(
         <>
           {topToasts.length > 0 && (

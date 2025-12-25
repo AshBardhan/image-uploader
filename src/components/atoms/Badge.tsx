@@ -24,6 +24,7 @@ export interface BadgeProps extends VariantProps<typeof badgeVariants> {
   ariaLabel?: string;
 }
 
+/* Badge Component with variant and accessibility support */
 export const Badge = ({
   children,
   variant,

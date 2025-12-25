@@ -29,6 +29,7 @@ interface CardProps
   ref?: Ref<HTMLDivElement>;
 }
 
+/* Card Component with theme and padding variants */
 export const Card = ({
   theme,
   padded,

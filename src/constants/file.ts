@@ -1,10 +1,18 @@
 import type { FileStatus, FileType } from "@/types/file";
 
+/* File-based interfaces */
 interface FileStatusInfo {
   label: string;
   variant: "default" | "info" | "success" | "danger";
 }
 
+interface FileTypeInfo {
+  label: string;
+  format: string;
+  accept: string;
+}
+
+/* File-based records */
 export const FILE_STATUS_MAP: Record<FileStatus, FileStatusInfo> = {
   pending: {
     label: "Pending",
@@ -20,12 +28,6 @@ export const FILE_STATUS_MAP: Record<FileStatus, FileStatusInfo> = {
   },
   error: { label: "Failed", variant: "danger" },
 };
-
-interface FileTypeInfo {
-  label: string;
-  format: string;
-  accept: string;
-}
 
 export const FILE_TYPE_MAP: Record<FileType, FileTypeInfo> = {
   image: {

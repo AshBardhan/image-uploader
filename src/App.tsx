@@ -6,11 +6,12 @@ import { FilesUploadStats } from "@/components/templates/FilesUploadStats";
 import { FilesPreview } from "@/components/templates/FilesPreview";
 import { FilesErrorFallback } from "@/components/templates/FilesErrorFallback";
 
+/* Main Page Application Component */
 function App() {
   const { files, time, actions } = useUppyUploader();
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+    <div className="mx-auto min-h-screen w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
       <div className="flex flex-col gap-6 sm:gap-8">
         {/* Header */}
         <Header

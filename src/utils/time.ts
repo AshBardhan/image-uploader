@@ -1,3 +1,4 @@
+/* Format time duration from seconds to human-readable format */
 export const formatTime = (seconds: number): string => {
   if (seconds < 60) {
     return `${seconds.toFixed(1)}s`;

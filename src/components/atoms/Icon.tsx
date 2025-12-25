@@ -60,6 +60,7 @@ const iconMap: Record<IconType, LucideIcon> = {
   folder: Folder,
 };
 
+/* Icon Component with size and accessibility support */
 export const Icon = ({
   type,
   className,

@@ -4,6 +4,7 @@ interface SkeletonBarProps {
   className?: string;
 }
 
+/* Skeleton Loading Bar Component with animation */
 export const SkeletonBar = ({ className }: SkeletonBarProps) => {
   return (
     <div

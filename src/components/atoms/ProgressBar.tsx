@@ -22,6 +22,7 @@ export interface ProgressBarProps {
   showPercentage?: boolean;
 }
 
+/* Progress Bar Chart Component to display progress with optional percentage */
 export const ProgressBar = ({
   progress,
   size = "md",

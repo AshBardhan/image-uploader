@@ -64,6 +64,7 @@ interface MetricProps {
   className?: string;
 }
 
+/* Memoized Metric Component to show label-value pair with direction, theme, size and reverse options */
 export const Metric = memo(
   ({
     label,

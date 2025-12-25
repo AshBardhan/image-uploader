@@ -44,6 +44,7 @@ interface ButtonProps
   ref?: Ref<HTMLButtonElement>;
 }
 
+/* Button Component with variants, sizes, loading state and accessibility support */
 export const Button = ({
   className,
   variant,

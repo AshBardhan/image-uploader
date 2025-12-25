@@ -11,7 +11,7 @@ export type ToastPosition = "top" | "bottom";
 type ToastState = "entering" | "visible" | "exitingTop" | "exitingBottom";
 
 const toastVariants = cva(
-  "relative flex items-start gap-3 border-2 rounded-lg shadow-lg transition-all duration-300 ease-in-out p-4",
+  "relative flex items-start gap-3 border-2 rounded-lg shadow-lg transition-all duration-300 ease-in-out p-3",
   {
     variants: {
       theme: {
@@ -53,6 +53,7 @@ export interface ToastProps {
   onClose: () => void;
 }
 
+/* Toast Component with theme, position, duration, and auto-close functionality */
 export const Toast = ({
   title,
   message,
@@ -64,15 +65,16 @@ export const Toast = ({
   const [state, setState] = useState<ToastState>("entering");
   const isClosingRef = useRef(false);
 
+  /* Handles closing the toast */
   const handleClose = () => {
     if (isClosingRef.current) return;
     isClosingRef.current = true;
 
     setState(position === "bottom" ? "exitingBottom" : "exitingTop");
-
     setTimeout(onClose, 300);
   };
 
+  /* Manages toast visibility and auto-close */
   useEffect(() => {
     const enterFrame = requestAnimationFrame(() => {
       setState("visible");

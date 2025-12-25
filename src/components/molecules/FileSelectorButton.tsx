@@ -4,6 +4,7 @@ import { FILE_TYPE_MAP } from "@/constants/file";
 import { cn } from "@/utils/style";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
+import { Text } from "@/components/atoms/Text";
 
 export interface FileSelectorButtonProps {
   onFilesSelected: (files: FileList) => void;
@@ -13,6 +14,7 @@ export interface FileSelectorButtonProps {
   isMobile?: boolean;
 }
 
+/* File Selector component to add files via button or mobile-friendly UI */
 export const FileSelectorButton = ({
   onFilesSelected,
   type = "all",
@@ -22,10 +24,12 @@ export const FileSelectorButton = ({
 }: FileSelectorButtonProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  /* Click handler to trigger file input */
   const handleClick = () => {
     fileInputRef.current?.click();
   };
 
+  /* Change handler to process selected files */
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
@@ -65,20 +69,23 @@ export const FileSelectorButton = ({
           )}
         >
           {/* Icon */}
-          <div className="rounded-full bg-gray-700 p-4 sm:p-6">
-            <Icon type="upload" size="lg" className="text-white" />
-          </div>
+          <Icon
+            type="drop"
+            size="xl"
+            strokeWidth={1.5}
+            className={"text-gray-500"}
+          />
 
           {/* Text */}
           <div className="space-y-1 text-center">
-            <p className="text-base font-semibold text-gray-950 sm:text-lg">
+            <Text variant="h3">
               Select {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""}
-            </p>
-            <p className="text-xs text-gray-800 sm:text-sm">
+            </Text>
+            <Text variant="p" className="text-xs md:text-sm">
               Tap to browse your {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""}
-            </p>
+            </Text>
           </div>
         </div>
       </div>

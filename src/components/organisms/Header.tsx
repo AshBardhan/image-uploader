@@ -1,5 +1,6 @@
 import { Text } from "@/components/atoms/Text";
 
+/* Header Component with title and description */
 export const Header = ({
   title,
   description,
