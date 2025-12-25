@@ -2,7 +2,7 @@ import type { HTMLAttributes, ReactNode, Ref } from "react";
 import { cn } from "@/utils/style";
 import { cva, type VariantProps } from "class-variance-authority";
 
-const cardVariants = cva("rounded-xl border shadow-lg transition-colors", {
+const cardVariants = cva("rounded-xl border shadow-xl transition-colors", {
   variants: {
     theme: {
       default: "bg-white border-gray-300",

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useMasonryItem } from "@/hooks/useMasonaryItem";
 import { Icon } from "@/components/atoms/Icon";
 import { Button } from "@/components/atoms/Button";
+import { Text } from "@/components/atoms/Text";
 import { SkeletonBar } from "@/components/atoms/SkeletonBar";
 import { Badge } from "@/components/atoms/Badge";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
@@ -157,12 +158,7 @@ export const FileItem = ({
               transition={{ duration: 0.3 }}
               className="absolute bottom-0 left-0 right-0 bg-black/50 p-2 backdrop-blur-sm sm:p-3"
             >
-              <ProgressBar
-                progress={progress}
-                variant={FILE_STATUS_MAP[status].variant}
-                showPercentage
-                size="sm"
-              />
+              <ProgressBar progress={progress} showPercentage size="sm" />
             </motion.div>
           )}
 
@@ -224,11 +220,13 @@ export const FileItem = ({
           )}
 
           {/* File name overlay on hover */}
-          <div className="absolute inset-x-0 top-0 -translate-y-full bg-black/90 p-2 backdrop-blur-sm transition-transform group-hover:translate-y-0">
-            <div className="truncate text-xs sm:text-sm font-medium text-white">
-              {name}
+          {!isFileLoading && preview && (
+            <div className="absolute inset-x-0 top-0 -translate-y-full bg-black/20 p-2 backdrop-blur-sm transition-transform group-hover:translate-y-0">
+              <Text className="truncate text-xs md:text-sm font-medium text-white">
+                {name}
+              </Text>
             </div>
-          </div>
+          )}
         </div>
       </Card>
     </AnimatePresence>

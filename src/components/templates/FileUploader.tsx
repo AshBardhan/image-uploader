@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { cn } from "@/utils/style";
 import { Icon } from "@/components/atoms/Icon";
+import { Text } from "@/components/atoms/Text";
 import { FileSelectorButton } from "@/components/molecules/FileSelectorButton";
 import { Card } from "@/components/molecules/Card";
 import type { FileType } from "@/types/file";
@@ -85,27 +86,21 @@ export const FileUploader = ({
             " hover:bg-blue-50 focus-visible:outline-none focus-visible:border-blue-600",
         )}
       >
-        <div className="flex flex-col items-center justify-center gap-2 sm:gap-4 text-center">
+        <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 text-center">
           <div className="space-y-2">
-            <div
-              className={cn(
-                "rounded-full p-4 transition-colors sm:p-6 inline-flex",
-                isDragging ? "bg-blue-600" : "bg-gray-700",
-              )}
-              aria-hidden="true"
-            >
-              <Icon type="upload" size="xl" className="text-white" />
-            </div>
-
-            <p className="text-base font-semibold text-gray-950 sm:text-lg md:text-xl">
+            <Icon
+              type="drop"
+              size="xl"
+              strokeWidth={1.5}
+              className={isDragging ? "text-black" : "text-gray-500"}
+            />
+            <Text variant="h4">
               Drop {FILE_TYPE_MAP[type].label}
               {multiple ? "s" : ""} here
-            </p>
+            </Text>
           </div>
           <div className="space-y-1">
-            <p className="text-sm text-gray-800 sm:text-base">
-              or use the button below to
-            </p>
+            <Text>or use the button below to</Text>
             <FileSelectorButton
               onFilesSelected={onFilesSelected}
               type={type}
@@ -113,13 +108,13 @@ export const FileUploader = ({
               disabled={disabled}
             />
           </div>
-          <div className="space-y-0.5">
-            <p className="text-xs text-gray-700 sm:text-sm">
+          <div className="space-y-0">
+            <Text className="text-xs md:text-sm">
               <strong>Supports:</strong> {FILE_TYPE_MAP[type].format}
-            </p>
-            <p className="text-xs text-gray-700 sm:text-sm">
+            </Text>
+            <Text className="text-xs md:text-sm">
               <strong>Limit:</strong> {maxSize / (1024 * 1024)}MB per file
-            </p>
+            </Text>
           </div>
         </div>
 

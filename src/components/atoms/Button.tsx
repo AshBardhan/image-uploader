@@ -4,7 +4,7 @@ import { cn } from "@/utils/style";
 
 const buttonVariants = cva(
   [
-    "inline-flex items-center justify-center gap-2 rounded-md transition-colors font-medium cursor-pointer",
+    "inline-flex items-center justify-center rounded-md transition-colors font-medium cursor-pointer",
     "focus-visible:outline-none focus-visible:shadow-xl focus-visible:ring-2",
     "disabled:cursor-not-allowed disabled:opacity-50",
   ],
@@ -25,9 +25,9 @@ const buttonVariants = cva(
           "text-gray-900 hover:text-gray-950 hover:bg-gray-100 focus-visible:ring-gray-500",
       },
       size: {
-        sm: "h-8 px-3 text-sm",
-        md: "h-10 px-4 text-base",
-        lg: "h-12 px-6 text-lg",
+        sm: "h-8 px-3 gap-1 text-sm",
+        md: "h-10 px-4 gap-2 text-base",
+        lg: "h-12 px-6 gap-3 text-lg",
       },
     },
     defaultVariants: {
@@ -67,12 +67,12 @@ export function Button({
       {...a11yProps}
       {...props}
     >
-      {loading ? (
+      {loading && (
         <span
           className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
           aria-hidden="true"
         />
-      ) : null}
+      )}
       {children}
     </button>
   );

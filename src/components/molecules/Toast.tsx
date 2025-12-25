@@ -99,7 +99,7 @@ export const Toast = ({
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 flex flex-col gap-1">
+      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
         {title && <Text variant="h5">{title}</Text>}
         <Text variant="p" className="wrap-break-word text-xs md:text-sm">
           {message}

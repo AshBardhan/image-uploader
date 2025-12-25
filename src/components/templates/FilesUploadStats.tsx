@@ -72,13 +72,6 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
             {/* Progress Bar */}
             <ProgressBar
               progress={uploadProgress}
-              variant={
-                hasFailed && !isUploading
-                  ? "danger"
-                  : isUploadComplete && totalFiles > 0
-                    ? "success"
-                    : "info"
-              }
               size="lg"
               showPercentage={true}
             />
@@ -138,7 +131,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
             role="status"
             aria-live="polite"
           >
-            <Icon type="check" size="xl" className="text-green-500" />
+            <Icon type="check" size="xl" className="text-green-600" />
             <div>
               <Text variant="h4" theme="success">
                 All files uploaded successfully
@@ -163,7 +156,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
             role="alert"
             aria-live="assertive"
           >
-            <Icon type="error" size="xl" className="text-red-500" />
+            <Icon type="error" size="xl" className="text-red-600" />
             <div>
               <Text variant="h4" theme="danger">
                 Unable to upload files
@@ -191,7 +184,7 @@ export const FilesUploadStats = ({ files, time }: FilesUploadStatsProps) => {
             role="status"
             aria-live="polite"
           >
-            <Icon type="info" size="xl" className="text-yellow-500" />
+            <Icon type="warning" size="xl" className="text-yellow-600" />
             <div>
               <Text variant="h4" theme="warning">
                 {pendingFiles} file{pendingFiles > 1 ? "s" : ""} pending upload

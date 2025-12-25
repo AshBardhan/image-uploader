@@ -46,17 +46,6 @@ export const FilesPreview = ({
               transition={{ duration: 0.2 }}
               className="flex flex-wrap gap-2"
             >
-              <Button
-                onClick={onUploadAll}
-                disabled={pending === 0 || uploading > 0}
-                loading={uploading > 0}
-                variant="primary"
-                size="sm"
-              >
-                {uploading === 0 && <Icon type="upload" size="sm" />}
-                Upload
-              </Button>
-
               {failed > 0 && (
                 <Button onClick={onRetryFailed} variant="danger" size="sm">
                   <Icon type="retry" size="sm" />
@@ -81,6 +70,17 @@ export const FilesPreview = ({
                   <span className="sm:hidden">Clear ({completed})</span>
                 </Button>
               )}
+
+              <Button
+                onClick={onUploadAll}
+                disabled={pending === 0 || uploading > 0}
+                loading={uploading > 0}
+                variant="primary"
+                size="sm"
+              >
+                {uploading === 0 && <Icon type="upload" size="sm" />}
+                Upload
+              </Button>
 
               <Button
                 onClick={onCancelAll}

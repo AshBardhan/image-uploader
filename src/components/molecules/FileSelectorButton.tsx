@@ -95,8 +95,13 @@ export const FileSelectorButton = ({
           className="hidden"
           disabled={disabled}
         />
-        <Button onClick={handleClick} disabled={disabled} variant="primary">
-          <Icon type="folder" size="sm" />
+        <Button
+          onClick={handleClick}
+          disabled={disabled}
+          variant="primary"
+          size="lg"
+        >
+          <Icon type="folder" size="md" />
           Browse {FILE_TYPE_MAP[type].label}
           {multiple ? "s" : ""}
         </Button>

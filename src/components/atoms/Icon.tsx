@@ -8,6 +8,7 @@ import {
   X,
   Trash2,
   RotateCw,
+  SquareDashedMousePointer,
   Smartphone,
   Folder,
   type LucideIcon,
@@ -24,13 +25,15 @@ export type IconType =
   | "cross"
   | "trash"
   | "retry"
+  | "drop"
   | "mobile"
   | "folder";
 
 interface IconProps {
   type: IconType;
   className?: string;
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | undefined;
+  strokeWidth?: number;
   ariaLabel?: string;
 }
 
@@ -52,6 +55,7 @@ const iconMap: Record<IconType, LucideIcon> = {
   cross: X,
   trash: Trash2,
   retry: RotateCw,
+  drop: SquareDashedMousePointer,
   mobile: Smartphone,
   folder: Folder,
 };
@@ -60,6 +64,7 @@ export const Icon = ({
   type,
   className,
   size = "md",
+  strokeWidth = 2,
   ariaLabel,
 }: IconProps) => {
   const IconComponent = iconMap[type];
@@ -77,7 +82,8 @@ export const Icon = ({
   return (
     <IconComponent
       size={sizeMap[size]}
-      className={cn(className)}
+      strokeWidth={strokeWidth}
+      className={cn("inline-flex", className)}
       {...a11yProps}
     />
   );

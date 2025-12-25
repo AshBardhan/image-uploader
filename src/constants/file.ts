@@ -2,27 +2,23 @@ import type { FileStatus, FileType } from "@/types/file";
 
 interface FileStatusInfo {
   label: string;
-  color: string;
   variant: "default" | "info" | "success" | "danger";
 }
 
 export const FILE_STATUS_MAP: Record<FileStatus, FileStatusInfo> = {
   pending: {
     label: "Pending",
-    color: "text-gray-700",
     variant: "default",
   },
   uploading: {
     label: "Uploading",
-    color: "text-blue-700",
     variant: "info",
   },
   completed: {
     label: "Uploaded",
-    color: "text-green-700",
     variant: "success",
   },
-  error: { label: "Failed", color: "text-red-700", variant: "danger" },
+  error: { label: "Failed", variant: "danger" },
 };
 
 interface FileTypeInfo {

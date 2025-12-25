@@ -33,9 +33,9 @@ const metricLabelVariants = cva("font-normal text-gray-700", {
 const metricValueVariants = cva("font-semibold", {
   variants: {
     theme: {
-      success: "text-green-800",
-      danger: "text-red-900",
-      default: "text-gray-850",
+      success: "text-green-700",
+      danger: "text-red-700",
+      default: "text-gray-900",
     },
     size: {
       small: "text-sm md:text-base",

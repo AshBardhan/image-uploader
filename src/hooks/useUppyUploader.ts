@@ -172,6 +172,7 @@ export function useUppyUploader(config?: UppyUploaderConfig) {
     showToast({
       title: "Retrying Failed Uploads",
       message: "Attempting to re-upload all failed files.",
+      duration: 2000,
     });
   }, [files, showToast]);
 
