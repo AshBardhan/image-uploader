@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { cva } from "class-variance-authority";
 import { cn } from "@/utils/style";
 
@@ -63,21 +64,23 @@ interface MetricProps {
   className?: string;
 }
 
-export function Metric({
-  label,
-  value,
-  theme = "default",
-  direction = "row",
-  size = "medium",
-  reverse = false,
-  className,
-}: MetricProps) {
-  return (
-    <div className={cn(metricContainerVariants({ direction }), className)}>
-      <div className={metricLabelVariants({ size, reverse })}>{label}</div>
-      <div className={metricValueVariants({ theme, size, reverse })}>
-        {value}
+export const Metric = memo(
+  ({
+    label,
+    value,
+    theme = "default",
+    direction = "row",
+    size = "medium",
+    reverse = false,
+    className,
+  }: MetricProps) => {
+    return (
+      <div className={cn(metricContainerVariants({ direction }), className)}>
+        <div className={metricLabelVariants({ size, reverse })}>{label}</div>
+        <div className={metricValueVariants({ theme, size, reverse })}>
+          {value}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  },
+);
