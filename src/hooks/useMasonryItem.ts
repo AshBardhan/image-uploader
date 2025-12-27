@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 /* Custom hook to manage masonry layout item sizing and observation */
-export function useMasonryItem(deps: unknown[] = []) {
+export function useMasonryItem<T>(preview: T) {
   const GAP_SIZE = 16;
   const itemRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -36,7 +36,7 @@ export function useMasonryItem(deps: unknown[] = []) {
       observerRef.current?.disconnect();
       observerRef.current = null;
     };
-  }, deps);
+  }, [preview]);
 
   return {
     itemRef,

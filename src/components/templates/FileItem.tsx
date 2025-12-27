@@ -45,7 +45,7 @@ export const FileItem = memo(
     };
 
     /* Masonry layout hook variables and functions */
-    const { itemRef, contentRef, observe } = useMasonryItem([preview]);
+    const { itemRef, contentRef, observe } = useMasonryItem(preview);
 
     return (
       <AnimatePresence mode="wait">
